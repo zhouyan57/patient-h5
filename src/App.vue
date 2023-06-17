@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button as VanButton, Checkbox as VanCheckbox } from 'vant'
+// import { Button as VanButton, Checkbox as VanCheckbox } from 'vant'
 import { ref } from 'vue'
 const agree = ref(true)
 </script>
