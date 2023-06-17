@@ -21,6 +21,11 @@ const clickRight = () => {
 // 箭头的点击事件
 const router = useRouter()
 const clickLeft = () => {
+  // 判断是否存在上一个页面（上一个页面是否是当前项目的页面）
+  if (!history.state.back) {
+    // 跳转根目录
+    return router.push('/')
+  }
   // 返回到上一个页面：
   router.back() // 以前 this.$router
 }
