@@ -24,7 +24,9 @@ const agree = ref(false)
     <van-form autocomplete="off">
       <van-field placeholder="请输入手机号" type="tel"></van-field>
       <van-field placeholder="请输入密码" type="password">
-        <template #right-icon> <img src="@/icons/login/eye-off.svg" /> </template>
+        <template #right-icon>
+          <cp-icon name="login-eye-off"></cp-icon>
+        </template>
       </van-field>
       <div class="cp-cell">
         <van-checkbox v-model="agree">
@@ -49,9 +51,6 @@ const agree = ref(false)
       </div>
     </div>
   </div>
-  <svg aria-hidden="true">
-    <use xlink:href="#icon-login-eye-off" />
-  </svg>
 </template>
 
 <style scoped lang="scss">
