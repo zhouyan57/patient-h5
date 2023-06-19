@@ -10,6 +10,19 @@ const agree = ref(false)
 const show = ref(false)
 const mobile = ref('')
 const password = ref('')
+// 4. 检验规则
+const mobileRule: FieldRule[] = [
+  {
+    required: true,
+    message: '请输入手机号',
+    trigger: 'onBlur'
+  },
+  { pattern: /^1[3-9]\d{9}$/, message: '手机号不合法', trigger: 'onBlur' }
+]
+const passwordRule: FieldRule[] = [
+  { required: true, message: '请输入密码', trigger: 'onBlur' },
+  { pattern: /^\w{8,24}$/, message: '密码长度为8~24', trigger: 'onBlur' }
+]
 </script>
 
 <template>
@@ -26,8 +39,18 @@ const password = ref('')
     </div>
     <!-- 表单区域 -->
     <van-form autocomplete="off">
-      <van-field v-model="mobile" placeholder="请输入手机号" type="tel"></van-field>
-      <van-field v-model="password" placeholder="请输入密码" :type="show ? 'text' : 'password'">
+      <van-field
+        :rules="mobileRule"
+        v-model="mobile"
+        placeholder="请输入手机号"
+        type="tel"
+      ></van-field>
+      <van-field
+        :rules="passwordRule"
+        v-model="password"
+        placeholder="请输入密码"
+        :type="show ? 'text' : 'password'"
+      >
         <template #right-icon>
           <cp-icon @click="show = !show" :name="`login-eye-${show ? 'on' : 'off'}`"></cp-icon>
         </template>
