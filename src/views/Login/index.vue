@@ -27,6 +27,9 @@ const onSubmit = async () => {
   // 保存用户信息
   store.setUser(res.data)
 }
+// 5. 密码框和手机验证 切换效果
+const isPwd = ref(true)
+const code = ref('')
 </script>
 
 <template>
@@ -35,9 +38,9 @@ const onSubmit = async () => {
     <cp-nav-bar :fixed="true" right-text="注册" @click-right="toRegister"></cp-nav-bar>
     <!-- 头部区域 -->
     <div class="login-head">
-      <h3>密码登录</h3>
+      <h3>{{ isPwd ? '密码登录' : '短信验证码登录' }}</h3>
       <a href="javascript:;">
-        <span>短信验证码登录</span>
+        <span @click="isPwd = !isPwd">{{ isPwd ? '短信验证码登录' : '密码登录' }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
@@ -50,6 +53,7 @@ const onSubmit = async () => {
         type="tel"
       ></van-field>
       <van-field
+        v-if="isPwd"
         :rules="passwordRule"
         v-model="password"
         placeholder="请输入密码"
@@ -57,6 +61,11 @@ const onSubmit = async () => {
       >
         <template #right-icon>
           <cp-icon @click="show = !show" :name="`login-eye-${show ? 'on' : 'off'}`"></cp-icon>
+        </template>
+      </van-field>
+      <van-field v-model="code" placeholder="短信验证码" v-else>
+        <template #button>
+          <span class="btn-send">发送验证码</span>
         </template>
       </van-field>
       <div class="cp-cell">
@@ -133,6 +142,13 @@ const onSubmit = async () => {
         padding: 0 5px;
       }
     }
+  }
+}
+// van-form 下添加
+.btn-send {
+  color: var(--cp-primary);
+  &.active {
+    color: rgba(22, 194, 163, 0.5);
   }
 }
 </style>
