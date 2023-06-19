@@ -6,6 +6,10 @@ const toRegister = () => {
 }
 // 2. 表单结构
 const agree = ref(false)
+// 3. 密码框的睁眼功能
+const show = ref(false)
+const mobile = ref('')
+const password = ref('')
 </script>
 
 <template>
@@ -22,10 +26,10 @@ const agree = ref(false)
     </div>
     <!-- 表单区域 -->
     <van-form autocomplete="off">
-      <van-field placeholder="请输入手机号" type="tel"></van-field>
-      <van-field placeholder="请输入密码" type="password">
+      <van-field v-model="mobile" placeholder="请输入手机号" type="tel"></van-field>
+      <van-field v-model="password" placeholder="请输入密码" :type="show ? 'text' : 'password'">
         <template #right-icon>
-          <cp-icon name="login-eye-off"></cp-icon>
+          <cp-icon @click="show = !show" :name="`login-eye-${show ? 'on' : 'off'}`"></cp-icon>
         </template>
       </van-field>
       <div class="cp-cell">
@@ -59,7 +63,6 @@ const agree = ref(false)
     padding-top: 46px;
   }
   &-head {
-    background-color: pink;
     padding: 30px 30px 50px;
     display: flex;
     justify-content: space-between;
