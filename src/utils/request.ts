@@ -1,5 +1,7 @@
 // 封装 axios
+import { useUserStore } from '@/stores'
 import axios from 'axios'
+import { useUserStore } from '@/stores'
 // 定义基地址
 const BASEURL = 'https://consult-api.itheima.net/'
 // 创建 axios 副本对象
@@ -11,6 +13,13 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   (config) => {
+    // 得到 token
+    const store = useUserStore()
+    const token = store.user?.token
+    // 判断是否存在token：如果存在，将 token 携带在请求头中
+    if (token && config.headers) {
+      config.Headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (err) => {
