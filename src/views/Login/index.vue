@@ -25,7 +25,7 @@ const onSubmit = async () => {
   const res = await loginByPassword(mobile.value, password.value)
   console.log(res)
   // 保存用户信息
-  store.setUser(res.data.data)
+  store.setUser(res.data)
 }
 </script>
 
