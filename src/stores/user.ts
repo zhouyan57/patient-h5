@@ -1,15 +1,8 @@
 // 管理与用户相关的全局数据
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-// 用户类型
-type User = {
-  token: string
-  refreshToken: string
-  avatar: string
-  mobile: string
-  account: string
-  id: string
-}
+import type { User } from '@/types/user'
+
 export const useUserStore = defineStore(
   'user',
   () => {
