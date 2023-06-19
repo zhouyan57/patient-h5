@@ -30,6 +30,18 @@ const onSubmit = async () => {
 // 5. 密码框和手机验证 切换效果
 const isPwd = ref(true)
 const code = ref('')
+// 6. 验证手机号
+const form = ref<HTMLFormElement | null>(null)
+const getCode = () => {
+  form
+    .value!.validate('mobile')
+    .then(() => {
+      console.log('验证通过')
+    })
+    .catch(() => {
+      console.log('验证失败')
+    })
+}
 </script>
 
 <template>
@@ -45,11 +57,12 @@ const code = ref('')
       </a>
     </div>
     <!-- 表单区域 -->
-    <van-form autocomplete="off" @submit="onSubmit">
+    <van-form ref="form" autocomplete="off" @submit="onSubmit">
       <van-field
         :rules="mobileRule"
         v-model="mobile"
         placeholder="请输入手机号"
+        name="mobile"
         type="tel"
       ></van-field>
       <van-field
@@ -65,7 +78,7 @@ const code = ref('')
       </van-field>
       <van-field v-model="code" placeholder="短信验证码" :rules="codeRule" v-else>
         <template #button>
-          <span class="btn-send">发送验证码</span>
+          <span @click="getCode" class="btn-send">发送验证码</span>
         </template>
       </van-field>
       <div class="cp-cell">
