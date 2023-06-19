@@ -14,3 +14,8 @@ export const passwordRule: FieldRule[] = [
   { required: true, message: '请输入密码', trigger: 'onBlur' },
   { pattern: /^\w{8,24}$/, message: '密码长度为8~24', trigger: 'onBlur' }
 ]
+// 3. 验证码的校验规则
+export const codeRule: FieldRule[] = [
+  { required: true, message: '请输入验证码', trigger: 'onBlur' },
+  { pattern: /^\d{6}$/, message: '验证码长度为6', trigger: 'onBlur' }
+]

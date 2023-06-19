@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { mobileRule, passwordRule } from '@/utils/rules'
+import { mobileRule, passwordRule, codeRule } from '@/utils/rules'
 import { showToast } from 'vant'
 import { loginByPassword } from '@/services/user'
 import { useUserStore } from '@/stores'
@@ -63,7 +63,7 @@ const code = ref('')
           <cp-icon @click="show = !show" :name="`login-eye-${show ? 'on' : 'off'}`"></cp-icon>
         </template>
       </van-field>
-      <van-field v-model="code" placeholder="短信验证码" v-else>
+      <van-field v-model="code" placeholder="短信验证码" :rules="codeRule" v-else>
         <template #button>
           <span class="btn-send">发送验证码</span>
         </template>
@@ -144,6 +144,7 @@ const code = ref('')
     }
   }
 }
+
 // van-form 下添加
 .btn-send {
   color: var(--cp-primary);
