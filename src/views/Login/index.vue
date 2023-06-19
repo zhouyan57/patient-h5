@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { mobileRule, passwordRule } from '@/utils/rules'
 import { showToast } from 'vant'
 import { loginByPassword } from '@/services/user'
+import { useUserStore } from '@/stores'
 
 // 1. 点击注册的事件
 const toRegister = () => {
@@ -15,12 +16,16 @@ const show = ref(false)
 const mobile = ref('13230000001')
 const password = ref('abc12345')
 // 4. 提交校验
+// 得到 store 实例
+const store = useUserStore()
 const onSubmit = async () => {
   // 判断是否同意协议
   if (!agree.value) return showToast('请先同意协议')
   // 发送请求
   const res = await loginByPassword(mobile.value, password.value)
   console.log(res)
+  // 保存用户信息
+  store.setUser(res.data.data)
 }
 </script>
 
