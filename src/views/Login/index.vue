@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { mobileRule, passwordRule } from '@/utils/rules'
 // 1. 点击注册的事件
 const toRegister = () => {
   console.log('跳转到注册页面')
@@ -10,19 +11,6 @@ const agree = ref(false)
 const show = ref(false)
 const mobile = ref('')
 const password = ref('')
-// 4. 检验规则
-const mobileRule: FieldRule[] = [
-  {
-    required: true,
-    message: '请输入手机号',
-    trigger: 'onBlur'
-  },
-  { pattern: /^1[3-9]\d{9}$/, message: '手机号不合法', trigger: 'onBlur' }
-]
-const passwordRule: FieldRule[] = [
-  { required: true, message: '请输入密码', trigger: 'onBlur' },
-  { pattern: /^\w{8,24}$/, message: '密码长度为8~24', trigger: 'onBlur' }
-]
 </script>
 
 <template>
