@@ -10,17 +10,23 @@ type User = {
   account: string
   id: string
 }
-export const useUserStore = defineStore('user', () => {
-  // 1. 定义用户信息
-  const user = ref<User>()
-  // 2. 定义方法
-  // 保存用户信息
-  const setUser = (obj: User) => {
-    user.value = obj
+export const useUserStore = defineStore(
+  'user',
+  () => {
+    // 1. 定义用户信息
+    const user = ref<User>()
+    // 2. 定义方法
+    // 保存用户信息
+    const setUser = (obj: User) => {
+      user.value = obj
+    }
+    // 清除用户信息
+    const removeUser = () => {
+      user.value = undefined
+    }
+    return { user, setUser, removeUser }
+  },
+  {
+    persist: true
   }
-  // 清除用户信息
-  const removeUser = () => {
-    user.value = undefined
-  }
-  return { user, setUser, removeUser }
-})
+)
