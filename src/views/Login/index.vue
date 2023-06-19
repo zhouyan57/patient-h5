@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { mobileRule, passwordRule } from '@/utils/rules'
 import { showToast } from 'vant'
+import { loginByPassword } from '@/services/user'
 
 // 1. 点击注册的事件
 const toRegister = () => {
@@ -11,12 +12,15 @@ const toRegister = () => {
 const agree = ref(false)
 // 3. 密码框的睁眼功能
 const show = ref(false)
-const mobile = ref('')
-const password = ref('')
+const mobile = ref('13230000001')
+const password = ref('abc12345')
 // 4. 提交校验
-const onSubmit = () => {
+const onSubmit = async () => {
   // 判断是否同意协议
   if (!agree.value) return showToast('请先同意协议')
+  // 发送请求
+  const res = await loginByPassword(mobile.value, password.value)
+  console.log(res)
 }
 </script>
 
