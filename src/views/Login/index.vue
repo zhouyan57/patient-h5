@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { mobileRule, passwordRule } from '@/utils/rules'
+import { showToast } from 'vant'
+
 // 1. 点击注册的事件
 const toRegister = () => {
   console.log('跳转到注册页面')
@@ -11,6 +13,11 @@ const agree = ref(false)
 const show = ref(false)
 const mobile = ref('')
 const password = ref('')
+// 4. 提交校验
+const onSubmit = () => {
+  // 判断是否同意协议
+  if (!agree.value) return showToast('请先同意协议')
+}
 </script>
 
 <template>
@@ -26,7 +33,7 @@ const password = ref('')
       </a>
     </div>
     <!-- 表单区域 -->
-    <van-form autocomplete="off">
+    <van-form autocomplete="off" @submit="onSubmit">
       <van-field
         :rules="mobileRule"
         v-model="mobile"
@@ -52,7 +59,7 @@ const password = ref('')
         </van-checkbox>
       </div>
       <div class="cp-cell">
-        <van-button block round type="primary">登 录</van-button>
+        <van-button native-type="submit" block round type="primary">登 录</van-button>
       </div>
       <div class="cp-cell">
         <a href="javascript:;">忘记密码？</a>
