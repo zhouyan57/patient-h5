@@ -32,15 +32,9 @@ const isPwd = ref(true)
 const code = ref('')
 // 6. 验证手机号
 const form = ref<HTMLFormElement | null>(null)
-const getCode = () => {
-  form
-    .value!.validate('mobile')
-    .then(() => {
-      console.log('验证通过')
-    })
-    .catch(() => {
-      console.log('验证失败')
-    })
+const getCode = async () => {
+  await form.value!.validate('mobile')
+  console.log('验证通过')
 }
 </script>
 
