@@ -28,4 +28,22 @@ instance.interceptors.response.use(
   }
 )
 
-export default instance
+// 定义返回值的类型
+type Res<T> = {
+  code: number
+  message: string
+  data: T
+}
+
+// 封装一个统一的网络请求 api
+const request = <T>(url: string, method: Method = 'get', obj?: object) => {
+  // 发送网络请求
+  return instance.request<Res<T>>({
+    url,
+    method,
+    // 属性的键动态生成
+    [method.toLowerCase() === 'get' ? 'params' : 'data']: obj
+  })
+}
+
+export { BASEURL, instance, request }
