@@ -2,8 +2,12 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+// 导入组件
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
+// 导入 svg 图标
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,6 +22,11 @@ export default defineConfig({
       // importStyle：自动引入组件样式
       //   默认为 true, 在 main.ts 中已经引入了样式，可以手动关闭
       resolvers: [VantResolver({ importStyle: false })]
+    }),
+    // 配置图标
+    createSvgIconsPlugin({
+      // 指定图标文件夹：绝对路径
+      iconDirs: [path.resolve(process.cwd(), 'src/icons')]
     })
   ],
   resolve: {
