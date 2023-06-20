@@ -22,3 +22,6 @@ export const getMobileCode = (mobile: string, type: CodeType = 'login') =>
 // 3. 登录--手机验证码登录
 export const loginByCode = (mobile: string, code: string) =>
   request<User>('/login', 'post', { mobile, code })
+
+// 4. 我的--获取个人用户信息
+export const getUserInfo = () => request<UserInfo>('/patient/myUser')
