@@ -23,22 +23,26 @@ const router = createRouter({
         // 我的
         {
           path: '/user',
-          component: () => import('@/views/User/index.vue')
+          component: () => import('@/views/User/index.vue'),
+          meta: { title: '我的' }
         },
         // 消息中心
         {
           path: '/notify',
-          component: () => import('@/views/Notify/index.vue')
+          component: () => import('@/views/Notify/index.vue'),
+          meta: { title: '消息中心' }
         },
         // 健康百科
         {
           path: '/article',
-          component: () => import('@/views/Article/index.vue')
+          component: () => import('@/views/Article/index.vue'),
+          meta: { title: '健康百科' }
         },
         // 首页
         {
           path: '/home',
-          component: () => import('@/views/Home/index.vue')
+          component: () => import('@/views/Home/index.vue'),
+          meta: { title: '首页' }
         }
       ]
     },
@@ -49,6 +53,10 @@ const router = createRouter({
 
 // 添加前置导航守卫
 router.beforeEach((to) => {
+  // 动态设置标题
+  if (to.meta.title) {
+    document.title = '优医问诊 - ' + to.meta.title
+  }
   // 得到 store 实例
   const store = useUserStore()
   // 得到 token
