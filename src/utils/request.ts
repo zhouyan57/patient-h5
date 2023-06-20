@@ -35,6 +35,8 @@ instance.interceptors.response.use(
       showToast(response.data.message)
       return Promise.reject(new Error(response.data.message))
     }
+    console.log('response', response)
+
     // 对返回的数据进行过滤
     return response.data
   },

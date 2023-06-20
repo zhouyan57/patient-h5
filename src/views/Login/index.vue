@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { mobileRule, passwordRule, codeRule } from '@/utils/rules'
 import { showToast } from 'vant'
-import { loginByPassword } from '@/services/user'
+import { loginByPassword, getMobileCode } from '@/services/user'
 import { useUserStore } from '@/stores'
 
 // 1. 点击注册的事件
@@ -30,11 +30,13 @@ const onSubmit = async () => {
 // 5. 密码框和手机验证 切换效果
 const isPwd = ref(true)
 const code = ref('')
-// 6. 验证手机号
+// 6. 验证手机号 & 获取验证码
 const form = ref<HTMLFormElement | null>(null)
 const getCode = async () => {
   await form.value!.validate('mobile')
-  console.log('验证通过')
+  const res = await getMobileCode(mobile.value)
+  // 显示验证码
+  showToast(res.data.code)
 }
 </script>
 
