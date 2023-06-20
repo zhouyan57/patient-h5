@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { mobileRule, passwordRule, codeRule } from '@/utils/rules'
-import { showToast } from 'vant'
-import { loginByPassword, getMobileCode } from '@/services/user'
+import { showLoadingToast, showSuccessToast, showToast } from 'vant'
+import { loginByPassword, getMobileCode, loginByCode } from '@/services/user'
 import { useUserStore } from '@/stores'
+import { useRouter } from 'vue-router'
 
 // 1. 点击注册的事件
 const toRegister = () => {
@@ -15,17 +16,28 @@ const agree = ref(false)
 const show = ref(false)
 const mobile = ref('13230000001')
 const password = ref('abc12345')
-// 4. 提交校验
+// 4. 提交校验 & 完成短信登录
 // 得到 store 实例
 const store = useUserStore()
+// 得到路由对象
+const router = useRouter()
 const onSubmit = async () => {
   // 判断是否同意协议
   if (!agree.value) return showToast('请先同意协议')
+  // 开启加载效果
+  showLoadingToast('登录中...')
+
   // 发送请求
-  const res = await loginByPassword(mobile.value, password.value)
-  console.log(res)
+  const res = isPwd.value
+    ? await loginByPassword(mobile.value, password.value) // 发送请求到服务器(密码登录)
+    : await loginByCode(mobile.value, code.value) // 发送请求到服务器(验证码登录)
+
   // 保存用户信息
   store.setUser(res.data)
+  // 提示登录成功
+  showSuccessToast('登录成功')
+  // 跳转到用户信息页面
+  router.push('/user')
 }
 // 5. 密码框和手机验证 切换效果
 const isPwd = ref(true)
