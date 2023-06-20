@@ -21,7 +21,9 @@ onMounted(async () => {
       <div class="patient-item" v-for="item in patientList" :key="item.id">
         <div class="info">
           <span class="name">{{ item.name }}</span>
-          <span class="id">{{ item.idCard }}</span>
+          <span class="id">{{
+            item.idCard.replace(/^(.{6})(?:\d+)(.{4})$/, '\$1********\$2')
+          }}</span>
           <span>{{ item.genderValue }}</span>
           <span>{{ item.age }}岁</span>
         </div>
