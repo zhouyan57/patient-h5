@@ -12,7 +12,36 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // 登录页面
-    { path: '/login', component: () => import('@/views/Login/index.vue') }
+    { path: '/login', component: () => import('@/views/Login/index.vue') },
+    // 布局容器
+    {
+      path: '/layout',
+      component: () => import('@/views/Layout/index.vue'),
+      children: [
+        // 我的
+        {
+          path: '/user',
+          component: () => import('@/views/User/index.vue')
+        },
+        // 消息中心
+        {
+          path: '/notify',
+          component: () => import('@/views/Notify/index.vue')
+        },
+        // 健康百科
+        {
+          path: '/article',
+          component: () => import('@/views/Article/index.vue')
+        },
+        // 首页
+        {
+          path: '/home',
+          component: () => import('@/views/Home/index.vue')
+        }
+      ]
+    },
+    // 重定向
+    { path: '/', redirect: '/home' }
   ]
 })
 
