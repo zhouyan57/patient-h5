@@ -30,13 +30,23 @@ const onSubmit = async () => {
 // 5. 密码框和手机验证 切换效果
 const isPwd = ref(true)
 const code = ref('')
-// 6. 验证手机号 & 获取验证码
+const second = ref(0)
+const timer = ref<number>()
+// 6. 验证手机号 & 获取验证码 & 设置倒计时
 const form = ref<HTMLFormElement | null>(null)
 const getCode = async () => {
   await form.value!.validate('mobile')
   const res = await getMobileCode(mobile.value)
   // 显示验证码
   showToast(res.data.code)
+  // 开启倒计时
+  second.value = 60
+  timer.value = setInterval(() => {
+    second.value--
+    if (second.value <= 0) {
+      clearInterval(timer.value)
+    }
+  }, 1000)
 }
 </script>
 
@@ -74,7 +84,8 @@ const getCode = async () => {
       </van-field>
       <van-field v-model="code" placeholder="短信验证码" :rules="codeRule" v-else>
         <template #button>
-          <span @click="getCode" class="btn-send">发送验证码</span>
+          <span v-if="second <= 0" @click="getCode" class="btn-send">发送验证码</span>
+          <span v-else>{{ second }}s后再次获取</span>
         </template>
       </van-field>
       <div class="cp-cell">
