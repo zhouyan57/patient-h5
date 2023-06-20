@@ -3,6 +3,8 @@
 //  createWebHistory：创建 history 路由模式  localhost:3000/login
 //  createWebHashHistory：创建 hash 路由模式 localhost:3000/#/login
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores'
+import { showToast } from 'vant'
 
 // 创建路由对象
 const router = createRouter({
@@ -43,6 +45,22 @@ const router = createRouter({
     // 重定向
     { path: '/', redirect: '/home' }
   ]
+})
+
+// 添加前置导航守卫
+router.beforeEach((to) => {
+  // 得到 store 实例
+  const store = useUserStore()
+  // 得到 token
+  const token = store.user?.token
+  // 设置一个白名单
+  const whiteList = ['/login']
+  // 不存在 token 且 跳转的页面不在白名单中 返回 login 页面
+  if (!token && !whiteList.includes(to.path)) {
+    // 提示未登录 并 返回登录页
+    showToast('您还未登录')
+    return '/login'
+  }
 })
 
 export default router
