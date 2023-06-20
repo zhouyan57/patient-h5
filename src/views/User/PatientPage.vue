@@ -1,29 +1,35 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getPatientList } from '@/services/user'
+import type { Patient } from '@/types/user'
+import { showLoadingToast } from 'vant'
+import { onMounted, ref } from 'vue'
+// 1. 获取患者信息（展示患者）
+const patientList = ref<Patient[]>([])
+onMounted(async () => {
+  const toast = showLoadingToast('数据加载中...')
+  const res = await getPatientList()
+  patientList.value = res.data
+  toast.close()
+})
+</script>
 
 <template>
   <div class="patient-page">
     <cp-nav-bar title="家庭档案"></cp-nav-bar>
     <div class="patient-list">
-      <div class="patient-item">
+      <!-- 成员列表 -->
+      <div class="patient-item" v-for="item in patientList" :key="item.id">
         <div class="info">
-          <span class="name">李富贵</span>
-          <span class="id">321***********6164</span>
-          <span>男</span>
-          <span>32岁</span>
+          <span class="name">{{ item.name }}</span>
+          <span class="id">{{ item.idCard }}</span>
+          <span>{{ item.genderValue }}</span>
+          <span>{{ item.age }}岁</span>
         </div>
         <div class="icon"><cp-icon name="user-edit" /></div>
-        <div class="tag">默认</div>
+        <div class="tag" v-if="item.defaultFlag">默认</div>
       </div>
-      <div class="patient-item">
-        <div class="info">
-          <span class="name">李富贵</span>
-          <span class="id">321***********6164</span>
-          <span>男</span>
-          <span>32岁</span>
-        </div>
-        <div class="icon"><cp-icon name="user-edit" /></div>
-      </div>
-      <div class="patient-add">
+      <!-- 添加患者按钮 -->
+      <div class="patient-add" v-if="patientList.length < 6">
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>

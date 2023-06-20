@@ -1,6 +1,6 @@
 // 封装用户相关的网络请求
 import { request } from '@/utils/request'
-import type { User, CodeType } from '@/types/user'
+import type { User, CodeType, UserInfo, Patient } from '@/types/user'
 
 // 1. 登录 -- 密码登录
 // export const loginByPassword = (mobile: string, password: string) =>
@@ -25,3 +25,6 @@ export const loginByCode = (mobile: string, code: string) =>
 
 // 4. 我的--获取个人用户信息
 export const getUserInfo = () => request<UserInfo>('/patient/myUser')
+
+// 5. 问诊--查询患者列表信息
+export const getPatientList = () => request<Patient[]>('/patient/mylist')
