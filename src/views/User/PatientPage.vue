@@ -3,6 +3,7 @@ import { getPatientList } from '@/services/user'
 import type { Patient } from '@/types/user'
 import { showLoadingToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
+import IDValidator from 'id-validator'
 // 1. 获取患者信息（展示患者）
 const patientList = ref<Patient[]>([])
 onMounted(async () => {
@@ -27,12 +28,19 @@ const showPop = () => {
 }
 // 4. 准备表单
 const patient = ref<Patient>({})
-// 5. 数据校验
+// 5. 数据校验 & 身份证号的校验
+var Validator = new IDValidator()
 const submit = () => {
-  // 校验参数
+  // 校验参数(普通校验)
   if (patient.value.name === undefined) return showToast('请输入姓名')
   if (patient.value.idCard === undefined) return showToast('请输入身份证号')
   if (patient.value.gender === undefined) return showToast('请选择性别')
+  // 身份证号校验
+  if (!Validator.isValid(patient.value.idCard)) return showToast('身份证号不合法')
+  // 核对性别
+  const { sex } = Validator.getInfo(patient.value.idCard)
+  if (sex !== patient.value.gender) return showToast('身份证号码与性别不匹配')
+  console.log('验证通过')
 }
 </script>
 
