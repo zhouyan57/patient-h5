@@ -3,11 +3,13 @@
 import { useRouter } from 'vue-router'
 import {} from 'vant'
 // 接收数据
-defineProps<{
+const props = defineProps<{
   // 标题
   title?: string
   // 右侧文本
   rightText?: string
+  // 自定义返回的事件
+  back?: () => void
 }>()
 // 定义事件
 const emit = defineEmits<{
@@ -21,6 +23,9 @@ const clickRight = () => {
 // 箭头的点击事件
 const router = useRouter()
 const clickLeft = () => {
+  if (props.back) {
+    return props.back()
+  }
   // 判断是否存在上一个页面（上一个页面是否是当前项目的页面）
   if (!history.state.back) {
     // 跳转根目录

@@ -50,9 +50,18 @@ const showPop = () => {
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
     <!-- 侧边栏 -->
+    <!-- <van-popup :show="show" @update:show="show = $event" position="right"> -->
     <van-popup v-model:show="show" position="right">
       <!-- 头部组件 -->
-      <cp-nav-bar title="添加患者" rightText="保存"></cp-nav-bar>
+      <cp-nav-bar
+        title="添加患者"
+        rightText="保存"
+        :back="
+          () => {
+            show = false
+          }
+        "
+      ></cp-nav-bar>
     </van-popup>
   </div>
 
@@ -69,7 +78,7 @@ const showPop = () => {
   padding: 46px 0 80px;
   ::v-deep() {
     .van-popup {
-      width: 80%;
+      width: 100%;
       height: 100%;
     }
   }
