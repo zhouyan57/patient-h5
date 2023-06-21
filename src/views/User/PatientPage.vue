@@ -38,6 +38,7 @@ onMounted(async () => {
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
   </div>
+  <cp-radio-btn></cp-radio-btn>
 </template>
 
 <style lang="scss" scoped>
