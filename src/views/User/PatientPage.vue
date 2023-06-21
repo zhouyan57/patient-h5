@@ -45,7 +45,12 @@ const gender = ref(0)
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
   </div>
-  <cp-radio-btn :data="data" :modelValue="gender"></cp-radio-btn>
+  <!-- <cp-radio-btn
+    :data="data"
+    :modelValue="gender"
+    @update:modelValue="gender = $event as number"
+  ></cp-radio-btn> -->
+  <cp-radio-btn :data="data" v-model="gender"></cp-radio-btn>
 </template>
 
 <style lang="scss" scoped>

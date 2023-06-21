@@ -9,6 +9,13 @@ defineProps<{
   // 默认值
   modelValue: string | number
 }>()
+const emits = defineEmits<{
+  (e: 'update:modelValue', v: string | number): void
+}>()
+// 2. 修改选中选项
+const changeDefault = (value: string | number) => {
+  emits('update:modelValue', value)
+}
 </script>
 
 <template>
@@ -16,6 +23,7 @@ defineProps<{
     <!-- <a class="item" href="javascript:;">男</a>
     <a class="item" href="javascript:;">女</a> -->
     <a
+      @click="changeDefault(item.value)"
       v-for="(item, index) in data"
       :key="index"
       class="item"
