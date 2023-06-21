@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getPatientList, addPatient, updatePatient } from '@/services/user'
+import { getPatientList, addPatient, updatePatient, removePatient } from '@/services/user'
 import type { Patient } from '@/types/user'
-import { showLoadingToast, showSuccessToast, showToast } from 'vant'
+import { showConfirmDialog, showLoadingToast, showSuccessToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import IDValidator from 'id-validator'
 // 1. 获取患者信息（展示患者）
@@ -61,6 +61,24 @@ const openEdit = (item: Patient) => {
   const { defaultFlag, gender, id, idCard, name } = item
   // 保存编辑的患者信息
   patient.value = { defaultFlag, gender, id, idCard, name }
+}
+
+// 7. 删除患者
+const remove = async () => {
+  // 判断 id
+  if (patient.value.id === undefined) return showToast('操作出错')
+  // 询问是否删除
+  await showConfirmDialog({
+    title: '温馨提示',
+    message: '确定要删除吗？'
+  })
+  await removePatient(patient.value.id)
+  // 提示成功
+  showSuccessToast('删除成功')
+  // 关闭面板
+  show.value = false
+  // 重新加载数据
+  getDataList()
 }
 </script>
 
@@ -124,6 +142,9 @@ const openEdit = (item: Patient) => {
           </template>
         </van-field>
       </van-form>
+      <van-action-bar v-if="patient.id">
+        <van-action-bar-button @click="remove">删除</van-action-bar-button>
+      </van-action-bar>
     </van-popup>
   </div>
 
@@ -220,5 +241,15 @@ const openEdit = (item: Patient) => {
 .patient-tip {
   color: var(--cp-tag);
   padding: 12px 0;
+}
+
+// 底部操作栏
+.van-action-bar {
+  padding: 0 10px;
+  margin-bottom: 10px;
+  .van-button {
+    color: var(--cp-price);
+    background-color: var(--cp-bg);
+  }
 }
 </style>

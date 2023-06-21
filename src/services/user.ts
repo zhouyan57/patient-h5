@@ -34,3 +34,6 @@ export const addPatient = (obj: Patient) => request('/patient/add', 'POST', obj)
 
 // 7. 问诊--编辑患者
 export const updatePatient = (obj: Patient) => request('/patient/update', 'PUT', obj)
+
+// 8 问诊--删除患者信息
+export const removePatient = (id: string) => request(`/patient/del/${id}`, 'DELETE')
