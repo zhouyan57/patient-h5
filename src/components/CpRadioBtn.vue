@@ -1,9 +1,28 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// 1. 接收数据源
+defineProps<{
+  // 选项的数据源
+  data: {
+    label: string
+    value: string | number
+  }[]
+  // 默认值
+  modelValue: string | number
+}>()
+</script>
 
 <template>
   <div class="cp-radio-btn">
-    <a class="item" href="javascript:;">男</a>
-    <a class="item" href="javascript:;">女</a>
+    <!-- <a class="item" href="javascript:;">男</a>
+    <a class="item" href="javascript:;">女</a> -->
+    <a
+      v-for="(item, index) in data"
+      :key="index"
+      class="item"
+      :class="{ active: modelValue === item.value }"
+      href="javascript:;"
+      >{{ item.label }}</a
+    >
   </div>
 </template>
 

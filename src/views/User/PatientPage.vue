@@ -11,6 +11,13 @@ onMounted(async () => {
   patientList.value = res.data
   toast.close()
 })
+// 2. 封装单选框组件（提供数据源）
+const data = [
+  { label: '男', value: 1 },
+  { label: '女', value: 0 }
+]
+// 选中的值
+const gender = ref(0)
 </script>
 
 <template>
@@ -38,7 +45,7 @@ onMounted(async () => {
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
   </div>
-  <cp-radio-btn></cp-radio-btn>
+  <cp-radio-btn :data="data" :modelValue="gender"></cp-radio-btn>
 </template>
 
 <style lang="scss" scoped>
