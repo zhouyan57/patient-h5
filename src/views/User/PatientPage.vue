@@ -22,7 +22,11 @@ const gender = ref(0)
 const show = ref(false)
 const showPop = () => {
   show.value = true
+  // 清空数据源
+  patient.value = {}
 }
+// 4. 准备表单
+const patient = ref<Patient>({})
 </script>
 
 <template>
@@ -62,6 +66,28 @@ const showPop = () => {
           }
         "
       ></cp-nav-bar>
+      <!-- 表单结构 -->
+      <van-form autocomplete="off">
+        <van-field v-model="patient.name" label="真实姓名" placeholder="请输入真实姓名" />
+        <van-field v-model="patient.idCard" label="身份证号" placeholder="请输入身份证号" />
+        <van-field label="性别">
+          <!-- 单选按钮组件 -->
+          <template #input>
+            <cp-radio-btn v-model="patient.gender" :data="data"></cp-radio-btn>
+          </template>
+        </van-field>
+        {{ patient.defaultFlag }}
+        <van-field label="默认就诊人">
+          <template #input>
+            <!-- <van-checkbox v-model="patient.defaultFlag" round /> -->
+            <van-checkbox
+              :modelValue="patient.defaultFlag ? true : false"
+              @update:modelValue="patient.defaultFlag = $event ? 1 : 0"
+              round
+            />
+          </template>
+        </van-field>
+      </van-form>
     </van-popup>
   </div>
 
@@ -78,6 +104,7 @@ const showPop = () => {
   padding: 46px 0 80px;
   ::v-deep() {
     .van-popup {
+      // padding-top: 48px;
       width: 100%;
       height: 100%;
     }

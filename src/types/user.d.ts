@@ -29,11 +29,11 @@ export type UserInfo = OmitUser & {
 // 4. 定义患者类型
 // 定义患者类型
 export type Patient = {
-  name: string
-  idCard: string
-  defaultFlag: number
-  gender: 0 | 1
-  genderValue: string
-  age: number
-  id: string
+  name?: string
+  idCard?: string
+  defaultFlag?: number
+  gender?: 0 | 1
+  genderValue?: string
+  age?: number
+  id?: string
 }
