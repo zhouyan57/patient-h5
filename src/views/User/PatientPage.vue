@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { getPatientList } from '@/services/user'
+import { getPatientList, addPatient } from '@/services/user'
 import type { Patient } from '@/types/user'
-import { showLoadingToast, showToast } from 'vant'
+import { showLoadingToast, showSuccessToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import IDValidator from 'id-validator'
 // 1. 获取患者信息（展示患者）
 const patientList = ref<Patient[]>([])
-onMounted(async () => {
+const getDataList = async () => {
   const toast = showLoadingToast('数据加载中...')
   const res = await getPatientList()
   patientList.value = res.data
   toast.close()
+}
+onMounted(() => {
+  getDataList()
 })
 // 2. 封装单选框组件（提供数据源）
 const data = [
@@ -24,13 +27,15 @@ const show = ref(false)
 const showPop = () => {
   show.value = true
   // 清空数据源
-  patient.value = {}
+  patient.value = {
+    defaultFlag: 0
+  }
 }
 // 4. 准备表单
 const patient = ref<Patient>({})
-// 5. 数据校验 & 身份证号的校验
+// 5. 数据校验 & 身份证号的校验 & 添加患者
 var Validator = new IDValidator()
-const submit = () => {
+const submit = async () => {
   // 校验参数(普通校验)
   if (patient.value.name === undefined) return showToast('请输入姓名')
   if (patient.value.idCard === undefined) return showToast('请输入身份证号')
@@ -40,7 +45,14 @@ const submit = () => {
   // 核对性别
   const { sex } = Validator.getInfo(patient.value.idCard)
   if (sex !== patient.value.gender) return showToast('身份证号码与性别不匹配')
-  console.log('验证通过')
+  // 添加患者
+  await addPatient(patient.value)
+  // 提示成功
+  showSuccessToast('添加成功')
+  // 关闭面板
+  show.value = false
+  // 重新加载数据
+  await getDataList()
 }
 </script>
 

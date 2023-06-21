@@ -28,3 +28,6 @@ export const getUserInfo = () => request<UserInfo>('/patient/myUser')
 
 // 5. 问诊--查询患者列表信息
 export const getPatientList = () => request<Patient[]>('/patient/mylist')
+
+// 6. 问诊--添加患者信息
+export const addPatient = (obj: Patient) => request('/patient/add', 'POST', obj)
