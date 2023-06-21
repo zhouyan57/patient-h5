@@ -31,3 +31,6 @@ export const getPatientList = () => request<Patient[]>('/patient/mylist')
 
 // 6. 问诊--添加患者信息
 export const addPatient = (obj: Patient) => request('/patient/add', 'POST', obj)
+
+// 7. 问诊--编辑患者
+export const updatePatient = (obj: Patient) => request('/patient/update', 'PUT', obj)

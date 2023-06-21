@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getPatientList, addPatient } from '@/services/user'
+import { getPatientList, addPatient, updatePatient } from '@/services/user'
 import type { Patient } from '@/types/user'
 import { showLoadingToast, showSuccessToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
@@ -33,7 +33,7 @@ const showPop = () => {
 }
 // 4. 准备表单
 const patient = ref<Patient>({})
-// 5. 数据校验 & 身份证号的校验 & 添加患者
+// 5. 数据校验 & 身份证号的校验 & 添加患者 & 编辑患者
 var Validator = new IDValidator()
 const submit = async () => {
   // 校验参数(普通校验)
@@ -45,14 +45,22 @@ const submit = async () => {
   // 核对性别
   const { sex } = Validator.getInfo(patient.value.idCard)
   if (sex !== patient.value.gender) return showToast('身份证号码与性别不匹配')
-  // 添加患者
-  await addPatient(patient.value)
+  // 添加患者 & 编辑患者
+  patient.value.id ? await updatePatient(patient.value) : await addPatient(patient.value)
   // 提示成功
-  showSuccessToast('添加成功')
+  showSuccessToast(patient.value.id ? '编辑成功' : '添加成功')
   // 关闭面板
   show.value = false
   // 重新加载数据
   await getDataList()
+}
+// 6. 编辑患者（打开面板）
+const openEdit = (item: Patient) => {
+  // 打开面板
+  show.value = true
+  const { defaultFlag, gender, id, idCard, name } = item
+  // 保存编辑的患者信息
+  patient.value = { defaultFlag, gender, id, idCard, name }
 }
 </script>
 
@@ -70,7 +78,7 @@ const submit = async () => {
           <span>{{ item.genderValue }}</span>
           <span>{{ item.age }}岁</span>
         </div>
-        <div class="icon"><cp-icon name="user-edit" /></div>
+        <div class="icon" @click="openEdit(item)"><cp-icon name="user-edit" /></div>
         <div class="tag" v-if="item.defaultFlag">默认</div>
       </div>
       <!-- 添加患者按钮 -->
@@ -85,7 +93,7 @@ const submit = async () => {
     <van-popup v-model:show="show" position="right">
       <!-- 头部组件 -->
       <cp-nav-bar
-        title="添加患者"
+        :title="patient.id ? '添加患者' : '新增患者'"
         rightText="保存"
         @click-right="submit"
         :back="
