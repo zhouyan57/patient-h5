@@ -7,7 +7,7 @@ defineProps<{
     value: string | number
   }[]
   // 默认值
-  modelValue: string | number
+  modelValue?: string | number
 }>()
 const emits = defineEmits<{
   (e: 'update:modelValue', v: string | number): void

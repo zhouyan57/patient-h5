@@ -18,6 +18,11 @@ const data = [
 ]
 // 选中的值
 const gender = ref(0)
+// 3. 侧边栏的显示与隐藏
+const show = ref(false)
+const showPop = () => {
+  show.value = true
+}
 </script>
 
 <template>
@@ -38,24 +43,36 @@ const gender = ref(0)
         <div class="tag" v-if="item.defaultFlag">默认</div>
       </div>
       <!-- 添加患者按钮 -->
-      <div class="patient-add" v-if="patientList.length < 6">
+      <div @click="showPop" class="patient-add" v-if="patientList.length < 6">
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
+    <!-- 侧边栏 -->
+    <van-popup v-model:show="show" position="right">
+      <!-- 头部组件 -->
+      <cp-nav-bar title="添加患者" rightText="保存"></cp-nav-bar>
+    </van-popup>
   </div>
+
   <!-- <cp-radio-btn
     :data="data"
     :modelValue="gender"
     @update:modelValue="gender = $event as number"
   ></cp-radio-btn> -->
-  <cp-radio-btn :data="data" v-model="gender"></cp-radio-btn>
+  <!-- <cp-radio-btn :data="data" v-model="gender"></cp-radio-btn> -->
 </template>
 
 <style lang="scss" scoped>
 .patient-page {
   padding: 46px 0 80px;
+  ::v-deep() {
+    .van-popup {
+      width: 80%;
+      height: 100%;
+    }
+  }
 }
 .patient-list {
   padding: 15px;
