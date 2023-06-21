@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getPatientList } from '@/services/user'
 import type { Patient } from '@/types/user'
-import { showLoadingToast } from 'vant'
+import { showLoadingToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 // 1. 获取患者信息（展示患者）
 const patientList = ref<Patient[]>([])
@@ -27,6 +27,13 @@ const showPop = () => {
 }
 // 4. 准备表单
 const patient = ref<Patient>({})
+// 5. 数据校验
+const submit = () => {
+  // 校验参数
+  if (patient.value.name === undefined) return showToast('请输入姓名')
+  if (patient.value.idCard === undefined) return showToast('请输入身份证号')
+  if (patient.value.gender === undefined) return showToast('请选择性别')
+}
 </script>
 
 <template>
@@ -38,7 +45,7 @@ const patient = ref<Patient>({})
         <div class="info">
           <span class="name">{{ item.name }}</span>
           <span class="id">{{
-            item.idCard.replace(/^(.{6})(?:\d+)(.{4})$/, '\$1********\$2')
+            item.idCard?.replace(/^(.{6})(?:\d+)(.{4})$/, '\$1********\$2')
           }}</span>
           <span>{{ item.genderValue }}</span>
           <span>{{ item.age }}岁</span>
@@ -60,6 +67,7 @@ const patient = ref<Patient>({})
       <cp-nav-bar
         title="添加患者"
         rightText="保存"
+        @click-right="submit"
         :back="
           () => {
             show = false
