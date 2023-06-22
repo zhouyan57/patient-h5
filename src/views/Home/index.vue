@@ -60,6 +60,17 @@
         </van-col>
       </van-row>
     </div>
+    <!-- 轮播图区域 -->
+    <div class="home-banner">
+      <van-swipe indicator-color="#fff">
+        <van-swipe-item>
+          <img src="@/assets/ad.png" alt="" />
+        </van-swipe-item>
+        <van-swipe-item>
+          <img src="@/assets/ad.png" alt="" />
+        </van-swipe-item>
+      </van-swipe>
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
@@ -140,6 +151,15 @@
         font-weight: normal;
       }
     }
+  }
+}
+// 轮播图区域
+.home-banner {
+  padding: 10px 15px;
+  height: 90px;
+  img {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>
