@@ -80,10 +80,10 @@ const active = ref<KnowledgeType>('recommend')
     {{ active }}
     <!-- 文章列表 -->
     <van-tabs v-model:active="active" shrink sticky>
-      <van-tab name="like" title="关注"><KnowledgeList /></van-tab>
-      <van-tab name="recommend" title="推荐"><KnowledgeList /></van-tab>
-      <van-tab name="fatReduction" title="减脂"><KnowledgeList /></van-tab>
-      <van-tab name="food" title="饮食"><KnowledgeList /></van-tab>
+      <van-tab name="like" title="关注"><KnowledgeList type="like" /></van-tab>
+      <van-tab name="recommend" title="推荐"><KnowledgeList type="recommend" /></van-tab>
+      <van-tab name="fatReduction" title="减脂"><KnowledgeList type="fatReduction" /></van-tab>
+      <van-tab name="food" title="饮食"><KnowledgeList type="food" /></van-tab>
     </van-tabs>
   </div>
 </template>
