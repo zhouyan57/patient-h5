@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import DoctorCard from './DoctorCard.vue'
-// import { onMounted, ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
+import { getDoctorList } from '@/services/consult'
+import type { DoctorList } from '@/types/consult'
+import { onMounted, ref } from 'vue'
 // 1.0 解决宽度问题
 // ----- 得到屏幕的宽度（@vueuse/core) ---
 const { width } = useWindowSize()
@@ -15,6 +17,21 @@ const { width } = useWindowSize()
 //   getWdth()
 //   window.addEventListener('resize', getWdth)
 // })
+
+// 2. 展示关注的医生列表
+// 当前页
+const current = ref(1)
+// 页容量
+const pageSize = ref(5)
+// 医生列表
+const doctorList = ref<DoctorList>()
+onMounted(async () => {
+  const res = await getDoctorList({
+    current: current.value,
+    pageSize: pageSize.value
+  })
+  doctorList.value = res.data.rows
+})
 </script>
 
 <template>
@@ -26,8 +43,8 @@ const { width } = useWindowSize()
     <div class="body">
       <!-- swipe 组件 -->
       <van-swipe :show-indicators="false" :width="(150 / 375) * width">
-        <van-swipe-item v-for="i in 8" :key="i">
-          <DoctorCard></DoctorCard>
+        <van-swipe-item v-for="i in doctorList" :key="i.id">
+          <DoctorCard :data="i"></DoctorCard>
         </van-swipe-item>
       </van-swipe>
     </div>
