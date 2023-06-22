@@ -71,6 +71,13 @@
         </van-swipe-item>
       </van-swipe>
     </div>
+    <!-- 文章列表 -->
+    <van-tabs shrink sticky>
+      <van-tab title="关注">内容 1</van-tab>
+      <van-tab title="推荐">内容 2</van-tab>
+      <van-tab title="减脂">内容 3</van-tab>
+      <van-tab title="饮食">内容 4</van-tab>
+    </van-tabs>
   </div>
 </template>
 <style scoped lang="scss">
@@ -160,6 +167,22 @@
   img {
     width: 100%;
     height: 100%;
+  }
+}
+// 列表区域
+// 全局覆盖van-tab样式
+::v-deep() {
+  .van-tabs {
+    .van-tabs__nav {
+      padding: 0 0 15px 0;
+    }
+    .van-tabs__line {
+      width: 20px;
+      background-color: var(--cp-primary);
+    }
+    .van-tab {
+      padding: 0 15px;
+    }
   }
 }
 </style>
