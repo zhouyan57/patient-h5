@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { Knowledge } from '@/types/consult'
-
+import { useFollow } from '@/composable'
+// 1. 接收数据源
 defineProps<{
   data: Knowledge
 }>()
+// 2. 关注医生
+const { loading, follow } = useFollow()
 </script>
 
 <template>
@@ -18,7 +21,7 @@ defineProps<{
           {{ data.creatorTitles }}
         </p>
       </div>
-      <van-button class="btn" size="small" round>
+      <van-button :loading="loading" @click="follow(data)" class="btn" size="small" round>
         {{ data.likeFlag ? '已关注' : '+ 关注' }}
       </van-button>
     </div>
