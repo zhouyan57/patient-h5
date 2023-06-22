@@ -2,6 +2,7 @@
 import type { KnowledgeType } from '@/types/user'
 import { ref } from 'vue'
 import KnowledgeList from './components/KnowledgeList.vue'
+import FollowDoctor from './components/FollowDoctor.vue'
 // 1. 切换文章列表
 const active = ref<KnowledgeType>('recommend')
 </script>
@@ -80,7 +81,10 @@ const active = ref<KnowledgeType>('recommend')
     {{ active }}
     <!-- 文章列表 -->
     <van-tabs v-model:active="active" shrink sticky>
-      <van-tab name="like" title="关注"><KnowledgeList type="like" /></van-tab>
+      <van-tab name="like" title="关注">
+        <follow-doctor></follow-doctor>
+        <KnowledgeList type="like" />
+      </van-tab>
       <van-tab name="recommend" title="推荐"><KnowledgeList type="recommend" /></van-tab>
       <van-tab name="fatReduction" title="减脂"><KnowledgeList type="fatReduction" /></van-tab>
       <van-tab name="food" title="饮食"><KnowledgeList type="food" /></van-tab>
