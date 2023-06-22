@@ -5,6 +5,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores'
 import { showToast } from 'vant'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+NProgress.configure({
+  showSpinner: false // 关闭右侧加载动画
+})
 
 // 创建路由对象
 const router = createRouter({
@@ -58,6 +64,8 @@ const router = createRouter({
 
 // 添加前置导航守卫
 router.beforeEach((to) => {
+  // 开启进度条
+  NProgress.start()
   // 动态设置标题
   if (to.meta.title) {
     document.title = '优医问诊 - ' + to.meta.title
@@ -74,6 +82,11 @@ router.beforeEach((to) => {
     showToast('您还未登录')
     return '/login'
   }
+})
+
+// 添加后置导航守卫
+router.afterEach(() => {
+  NProgress.done()
 })
 
 export default router

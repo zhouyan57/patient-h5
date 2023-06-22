@@ -60,3 +60,8 @@ ol {
     }
   }
   
+  // 修改进度条的颜色
+  #nprogress .bar {
+    background-color: var(--cp-primary) !important;
+  }
+  
