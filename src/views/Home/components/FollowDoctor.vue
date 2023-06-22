@@ -1,5 +1,17 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import DoctorCard from './DoctorCard.vue'
+import { onMounted } from 'vue'
+// 1. 解决宽度问题
+// 得到屏幕的宽度
+const width = ref(0)
+const getWidth = () => {
+  width.value = window.innerWidth
+}
+onMounted(() => {
+  getWidth()
+  window.addEventListener('resize', getWidth)
+})
 </script>
 
 <template>
@@ -10,7 +22,7 @@ import DoctorCard from './DoctorCard.vue'
     </div>
     <div class="body">
       <!-- swipe 组件 -->
-      <van-swipe :show-indicators="false" :width="160">
+      <van-swipe :show-indicators="false" :width="(150 / 375) * width">
         <van-swipe-item v-for="i in 8" :key="i">
           <DoctorCard></DoctorCard>
         </van-swipe-item>
