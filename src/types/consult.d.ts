@@ -74,3 +74,11 @@ export type DoctorParams = {
   current: number
   pageSize: number
 }
+
+// 关注的类型
+export type FollowType = 'topic' | 'knowledge' | 'doc' | 'disease'
+// 关注接口的参数类型
+export type FollowParams = {
+  type: FollowType
+  id: string
+}
