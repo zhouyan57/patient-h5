@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { KnowledgeType } from '@/types/user'
+import { ref } from 'vue'
+import KnowledgeList from './components/KnowledgeList.vue'
+// 1. 切换文章列表
+const active = ref<KnowledgeType>('recommend')
+</script>
 <template>
   <div class="home-page">
     <!-- 头部区域 -->
@@ -71,12 +77,13 @@
         </van-swipe-item>
       </van-swipe>
     </div>
+    {{ active }}
     <!-- 文章列表 -->
-    <van-tabs shrink sticky>
-      <van-tab title="关注">内容 1</van-tab>
-      <van-tab title="推荐">内容 2</van-tab>
-      <van-tab title="减脂">内容 3</van-tab>
-      <van-tab title="饮食">内容 4</van-tab>
+    <van-tabs v-model:active="active" shrink sticky>
+      <van-tab name="like" title="关注"><KnowledgeList /></van-tab>
+      <van-tab name="recommend" title="推荐"><KnowledgeList /></van-tab>
+      <van-tab name="fatReduction" title="减脂"><KnowledgeList /></van-tab>
+      <van-tab name="food" title="饮食"><KnowledgeList /></van-tab>
     </van-tabs>
   </div>
 </template>
@@ -167,22 +174,6 @@
   img {
     width: 100%;
     height: 100%;
-  }
-}
-// 列表区域
-// 全局覆盖van-tab样式
-::v-deep() {
-  .van-tabs {
-    .van-tabs__nav {
-      padding: 0 0 15px 0;
-    }
-    .van-tabs__line {
-      width: 20px;
-      background-color: var(--cp-primary);
-    }
-    .van-tab {
-      padding: 0 15px;
-    }
   }
 }
 </style>

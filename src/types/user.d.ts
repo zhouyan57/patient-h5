@@ -37,3 +37,5 @@ export type Patient = {
   age?: number
   id?: string
 }
+// 文章类型
+export type KnowledgeType = 'recommend' | 'fatReduction' | 'food' | 'like'
