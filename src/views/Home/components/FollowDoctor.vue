@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import DoctorCard from './DoctorCard.vue'
-import { onMounted } from 'vue'
-// 1. 解决宽度问题
-// 得到屏幕的宽度
-const width = ref(0)
-const getWidth = () => {
-  width.value = window.innerWidth
-}
-onMounted(() => {
-  getWidth()
-  window.addEventListener('resize', getWidth)
-})
+// import { onMounted, ref } from 'vue'
+import { useWindowSize } from '@vueuse/core'
+// 1.0 解决宽度问题
+// ----- 得到屏幕的宽度（@vueuse/core) ---
+const { width } = useWindowSize()
+// ----- 得到屏幕的宽度（dom 操作） ---
+// const width = ref(0)
+// const getWdth = () => {
+//   width.value = window.innerWidth
+//   console.log(width.value)
+// }
+// onMounted(() => {
+//   getWdth()
+//   window.addEventListener('resize', getWdth)
+// })
 </script>
 
 <template>
