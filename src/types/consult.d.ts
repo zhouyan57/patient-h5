@@ -119,3 +119,9 @@ export type Consult = {
 // 问诊记录-全部可选
 export type PartialConsult = Partial<Consult>
 // Required 转换为全部必须   Partial 转换问全部可选  两个内置的泛型类型
+
+// 病情类型
+export type Illness = Pick<
+  PartialConsult,
+  'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'
+>
