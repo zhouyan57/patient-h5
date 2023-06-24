@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import type { KnowledgeType } from '@/types/user'
 import { ref } from 'vue'
+import { useConsultStore } from '@/stores'
+import { ConsultType } from '@/enums'
 import KnowledgeList from './components/KnowledgeList.vue'
 import FollowDoctor from './components/FollowDoctor.vue'
 // 1. 切换文章列表
 const active = ref<KnowledgeType>('recommend')
+// 2. 保存就诊类型
+const store = useConsultStore()
 </script>
 <template>
   <div class="home-page">
@@ -26,7 +30,7 @@ const active = ref<KnowledgeType>('recommend')
           </router-link>
         </van-col>
         <van-col span="8">
-          <router-link to="/consult/fast" class="nav">
+          <router-link @click="store.setType(ConsultType.Fast)" to="/consult/fast" class="nav">
             <cp-icon name="home-graphic"></cp-icon>
             <p class="title">极速问诊</p>
             <p class="desc">20s医生极速回复</p>
