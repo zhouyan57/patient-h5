@@ -33,19 +33,32 @@ const flagOptions = [
     </div>
     <!-- 表单 -->
     <div class="illness-form">
+      <!-- 病情描述 -->
       <van-field
         type="textarea"
         rows="3"
         placeholder="请详细描述您的病情，病情描述不能为空"
         v-model="form.illnessDesc"
       ></van-field>
+      <!-- 患病时间 -->
       <div class="item">
         <p>本次患病多久了？</p>
         <cp-radio-btn :data="timeOptions" v-model="form.illnessTime" />
       </div>
+      <!-- 是否就诊 -->
       <div class="item">
         <p>此次病情是否去医院就诊过？</p>
         <cp-radio-btn :data="flagOptions" v-model="form.consultFlag" />
+      </div>
+      <!-- 上传结构 -->
+      <div class="illness-img">
+        <van-uploader
+          upload-icon="photo-o"
+          upload-text="上传图片"
+          :max-count="3"
+          :max-size="5 * 1024 * 1024"
+        />
+        <p class="tip">上传内容仅医生可见,最多9张图,最大5MB</p>
       </div>
     </div>
   </div>
@@ -103,6 +116,43 @@ const flagOptions = [
     > p {
       color: var(--cp-text3);
       padding: 15px 0;
+    }
+  }
+}
+.illness-img {
+  padding-top: 16px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  .tip {
+    font-size: 12px;
+    color: var(--cp-tip);
+  }
+  ::v-deep() {
+    .van-uploader {
+      &__preview {
+        &-delete {
+          left: -6px;
+          top: -6px;
+          border-radius: 50%;
+          background-color: var(--cp-primary);
+          width: 20px;
+          height: 20px;
+          &-icon {
+            transform: scale(0.9) translate(-22%, 22%);
+          }
+        }
+        &-image {
+          border-radius: 8px;
+          overflow: hidden;
+        }
+      }
+      &__upload {
+        border-radius: 8px;
+      }
+      &__upload-icon {
+        color: var(--cp-text3);
+      }
     }
   }
 }
