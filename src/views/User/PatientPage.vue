@@ -4,6 +4,7 @@ import type { Patient } from '@/types/user'
 import { showConfirmDialog, showLoadingToast, showSuccessToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import IDValidator from 'id-validator'
+import { useRoute } from 'vue-router'
 // 1. 获取患者信息（展示患者）
 const patientList = ref<Patient[]>([])
 const getDataList = async () => {
@@ -80,12 +81,21 @@ const remove = async () => {
   // 重新加载数据
   getDataList()
 }
+
+// 8. 界面兼容(与选择患者兼容)
+const route = useRoute()
+const isChange = route.query.isChange
 </script>
 
 <template>
   <div class="patient-page">
-    <cp-nav-bar title="家庭档案"></cp-nav-bar>
+    <cp-nav-bar :title="isChange ? '选择患者' : '家庭档案'" />
     <div class="patient-list">
+      <!-- 头部提示 -->
+      <div class="patient-change" v-if="isChange">
+        <h3>请选择患者信息</h3>
+        <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+      </div>
       <!-- 成员列表 -->
       <div class="patient-item" v-for="item in patientList" :key="item.id">
         <div class="info">
@@ -154,14 +164,18 @@ const remove = async () => {
     @update:modelValue="gender = $event as number"
   ></cp-radio-btn> -->
   <!-- <cp-radio-btn :data="data" v-model="gender"></cp-radio-btn> -->
+  <!-- 底部按钮 -->
+  <div class="patient-next" v-if="isChange">
+    <van-button type="primary" round block>下一步</van-button>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .patient-page {
-  padding: 46px 0 80px;
+  // padding: 46px 0 80px;
   ::v-deep() {
     .van-popup {
-      // padding-top: 48px;
+      padding-top: 48px;
       width: 100%;
       height: 100%;
     }
@@ -251,5 +265,25 @@ const remove = async () => {
     color: var(--cp-price);
     background-color: var(--cp-bg);
   }
+}
+.patient-change {
+  padding: 15px;
+  > h3 {
+    font-weight: normal;
+    margin-bottom: 5px;
+  }
+  > p {
+    color: var(--cp-text3);
+  }
+}
+.patient-next {
+  padding: 15px;
+  background-color: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  box-sizing: border-box;
 }
 </style>
