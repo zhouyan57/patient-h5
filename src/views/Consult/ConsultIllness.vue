@@ -60,6 +60,8 @@ const next = () => {
   // 判断数据合法性
   if (form.value.illnessDesc?.trim() === '') return showToast('病情描述不能为空')
   store.setIllness(form.value)
+  // 把图片保存到本地
+  localStorage.setItem('fileList', JSON.stringify(fileList.value))
   // 跳转到选择患者页面
   router.push('/user/patient?isChange=1')
 }
@@ -87,6 +89,7 @@ onMounted(async () => {
       consultFlag: store.consult.consultFlag,
       pictures: store.consult.pictures
     }
+    fileList.value = JSON.parse(localStorage.getItem('fileList') || '[]')
   }
 })
 </script>
