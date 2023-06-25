@@ -85,6 +85,13 @@ const remove = async () => {
 // 8. 界面兼容(与选择患者兼容)
 const route = useRoute()
 const isChange = route.query.isChange
+
+// 9. 点击选中
+const patientId = ref('')
+const changePatient = (id: string | undefined) => {
+  if (!id) return
+  patientId.value = id
+}
 </script>
 
 <template>
@@ -97,7 +104,13 @@ const isChange = route.query.isChange
         <p>以便医生给出更准确的治疗，信息仅医生可见</p>
       </div>
       <!-- 成员列表 -->
-      <div class="patient-item" v-for="item in patientList" :key="item.id">
+      <div
+        class="patient-item"
+        :class="{ selected: patientId === item.id }"
+        @click="changePatient(item.id)"
+        v-for="item in patientList"
+        :key="item.id"
+      >
         <div class="info">
           <span class="name">{{ item.name }}</span>
           <span class="id">{{
