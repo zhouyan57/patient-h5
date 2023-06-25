@@ -10,7 +10,15 @@ const patientList = ref<Patient[]>([])
 const getDataList = async () => {
   const toast = showLoadingToast('数据加载中...')
   const res = await getPatientList()
+  // 得到患者列表
   patientList.value = res.data
+  // 保存默认数据
+  const obj = patientList.value.find((item) => item.defaultFlag === 1)
+  if (obj && obj.id) {
+    patientId.value = obj.id
+  } else {
+    patientId.value = patientList.value[0].id!
+  }
   toast.close()
 }
 onMounted(() => {
