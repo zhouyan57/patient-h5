@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Illness } from '@/types/consult'
-import type { UploaderFileListItem } from 'vant'
-import { ref } from 'vue'
+import { showToast, type UploaderFileListItem } from 'vant'
+import { computed, ref } from 'vue'
 import { updateFile } from '@/services/consult'
 import type { UploaderAfterRead } from 'vant/lib/uploader/types'
+import { useConsultStore } from '@/stores'
 
 // 1. 渲染结构
 // 表单数据源
@@ -43,12 +44,27 @@ const afterRead: UploaderAfterRead = async (items) => {
     items.message = '完成上传'
   }, 2000)
 }
+// 4. 删除图片
 const deleteImg: UploaderAfterRead = (items) => {
   // 删除 pictures 中对应的图片
   if (Array.isArray(items)) return
   if (!items.url) return
   form.value.pictures = form.value.pictures?.filter((item) => item.url !== items.url)
 }
+// 5. 保存数据
+const store = useConsultStore()
+const next = () => {
+  // 判断数据合法性
+  if (form.value.illnessDesc?.trim() === '') return showToast('病情描述不能为空')
+  store.setIllness(form.value)
+}
+const disabled = computed(() => {
+  return (
+    form.value.illnessDesc === undefined ||
+    form.value.illnessTime === undefined ||
+    form.value.consultFlag === undefined
+  )
+})
 </script>
 
 <template>
@@ -95,6 +111,10 @@ const deleteImg: UploaderAfterRead = (items) => {
         />
         <p class="tip" v-if="fileList.length <= 0">上传内容仅医生可见,最多9张图,最大5MB</p>
       </div>
+      <!-- 下一步按钮 -->
+      <van-button :class="{ disabled: disabled }" @click="next" type="primary" block round>
+        下一步
+      </van-button>
     </div>
   </div>
 </template>
@@ -189,6 +209,16 @@ const deleteImg: UploaderAfterRead = (items) => {
         color: var(--cp-text3);
       }
     }
+  }
+}
+.van-button {
+  font-size: 16px;
+  margin-bottom: 30px;
+  &.disabled {
+    opacity: 1;
+    background: #fafafa;
+    color: #d9dbde;
+    border: #fafafa;
   }
 }
 </style>
