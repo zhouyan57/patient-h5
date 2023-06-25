@@ -4,7 +4,9 @@ import type { Patient } from '@/types/user'
 import { showConfirmDialog, showLoadingToast, showSuccessToast, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import IDValidator from 'id-validator'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useConsultStore } from '@/stores'
+
 // 1. 获取患者信息（展示患者）
 const patientList = ref<Patient[]>([])
 const getDataList = async () => {
@@ -100,6 +102,16 @@ const changePatient = (id: string | undefined) => {
   if (!id) return
   patientId.value = id
 }
+
+// 10. 点击下一步
+const store = useConsultStore()
+const router = useRouter()
+const next = () => {
+  // 保存数据
+  store.setPatientId(patientId.value)
+  // 跳转到支付页面
+  router.push('/consult/pay')
+}
 </script>
 
 <template>
@@ -187,7 +199,7 @@ const changePatient = (id: string | undefined) => {
   <!-- <cp-radio-btn :data="data" v-model="gender"></cp-radio-btn> -->
   <!-- 底部按钮 -->
   <div class="patient-next" v-if="isChange">
-    <van-button type="primary" round block>下一步</van-button>
+    <van-button @click="next" type="primary" round block>下一步</van-button>
   </div>
 </template>
 
