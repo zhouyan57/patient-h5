@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Illness } from '@/types/consult'
+import type { UploaderFileListItem } from 'vant'
 import { ref } from 'vue'
 
 // 1. 渲染结构
@@ -17,6 +18,14 @@ const flagOptions = [
   { label: '就诊过', value: 1 },
   { label: '没就诊过', value: 0 }
 ]
+// 2. 预览图片
+const fileList = ref<UploaderFileListItem[]>([])
+const afterRead = () => {
+  console.log('afterRead')
+}
+const deleteImg = () => {
+  console.log('deleteImg')
+}
 </script>
 
 <template>
@@ -53,12 +62,15 @@ const flagOptions = [
       <!-- 上传结构 -->
       <div class="illness-img">
         <van-uploader
+          v-model="fileList"
+          :after-read="afterRead"
+          @delete="deleteImg"
           upload-icon="photo-o"
           upload-text="上传图片"
           :max-count="3"
           :max-size="5 * 1024 * 1024"
         />
-        <p class="tip">上传内容仅医生可见,最多9张图,最大5MB</p>
+        <p class="tip" v-if="fileList.length <= 0">上传内容仅医生可见,最多9张图,最大5MB</p>
       </div>
     </div>
   </div>

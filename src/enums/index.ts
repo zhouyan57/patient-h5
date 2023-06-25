@@ -7,6 +7,7 @@ export enum ConsultType {
   // 开药问诊
   Medication = 3
 }
+
 // 问诊时间，以1自增可以省略
 export enum IllnessTime {
   // 一周内
