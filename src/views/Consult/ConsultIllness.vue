@@ -29,11 +29,19 @@ const afterRead: UploaderAfterRead = async (items) => {
   // 排除图片为数组的情况
   if (Array.isArray(items)) return
   if (!items.file) return
-  // 上传图片
-  const res = await updateFile(items.file)
-  items.url = res.data.url
-  // 保存上传图片的信息到 form 中的 pictures 中
-  form.value.pictures?.push(res.data)
+  // 设置加载状态
+  items.status = 'uploading'
+  items.message = '上传中...'
+  setTimeout(async () => {
+    // 上传图片
+    const res = await updateFile(items.file!)
+    items.url = res.data.url
+    // 保存上传图片的信息到 form 中的 pictures 中
+    form.value.pictures?.push(res.data)
+    // 设置完成状态
+    items.status = 'done'
+    items.message = '完成上传'
+  }, 2000)
 }
 const deleteImg = () => {
   console.log('deleteImg')
