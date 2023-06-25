@@ -16,5 +16,12 @@ export const getDoctorList = (params: DoctorParams) =>
   request<DoctorPage>('/home/page/doc', 'get', params)
 // 3. 关注-关注操作
 export const followLike = (data: FollowParams) => request('/like', 'POST', data)
-// 4.0 找医生-查询所有科室-层级
+// 4. 找医生-查询所有科室-层级
 export const getAllDep = () => request<DepList>('/dep/all')
+// 5. 上传文件/图片
+export const updateFile = (file: File) => {
+  // 如果要进入文件的上传，需要将文件管理到一个对象：formData
+  const fd = new FormData()
+  fd.append('file', file)
+  return request<{ id: string; url: string }>('/upload', 'POST', fd)
+}

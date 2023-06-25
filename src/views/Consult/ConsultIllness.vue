@@ -2,10 +2,14 @@
 import type { Illness } from '@/types/consult'
 import type { UploaderFileListItem } from 'vant'
 import { ref } from 'vue'
+import { updateFile } from '@/services/consult'
+import type { UploaderAfterRead } from 'vant/lib/uploader/types'
 
 // 1. 渲染结构
 // 表单数据源
-const form = ref<Illness>({})
+const form = ref<Illness>({
+  pictures: []
+})
 // 患病时间选项
 const timeOptions = [
   { label: '一周内', value: 1 },
@@ -20,8 +24,16 @@ const flagOptions = [
 ]
 // 2. 预览图片
 const fileList = ref<UploaderFileListItem[]>([])
-const afterRead = () => {
-  console.log('afterRead')
+// 3. 上传图片
+const afterRead: UploaderAfterRead = async (items) => {
+  // 排除图片为数组的情况
+  if (Array.isArray(items)) return
+  if (!items.file) return
+  // 上传图片
+  const res = await updateFile(items.file)
+  items.url = res.data.url
+  // 保存上传图片的信息到 form 中的 pictures 中
+  form.value.pictures?.push(res.data)
 }
 const deleteImg = () => {
   console.log('deleteImg')
