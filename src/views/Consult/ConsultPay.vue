@@ -4,10 +4,12 @@ import { useConsultStore } from '@/stores'
 import type { ConsultOrderPreData } from '@/types/consult'
 import { showToast } from 'vant'
 import { onMounted, ref } from 'vue'
+import { getPatient } from '@/services/user'
+import type { Patient } from '@/types/user'
 
 // 1. 渲染订单信息
 const store = useConsultStore()
-const { type, illnessType } = store.consult
+const { type, illnessType, patientId, illnessDesc } = store.consult
 const consult = ref<ConsultOrderPreData>()
 onMounted(async () => {
   if (!type || !illnessType) return showToast('缺少必要的参数')
@@ -16,6 +18,13 @@ onMounted(async () => {
     illnessType
   })
   consult.value = res.data
+})
+// 2. 设置患者信息
+const patient = ref<Patient>()
+onMounted(async () => {
+  if (!patientId || !illnessType) return showToast('缺少必要的参数')
+  const res = await getPatient(patientId)
+  patient.value = res.data
 })
 </script>
 
@@ -43,8 +52,11 @@ onMounted(async () => {
 
     <!-- 患者信息 -->
     <van-cell-group>
-      <van-cell title="患者信息" value="李富贵 | 男 | 30岁"></van-cell>
-      <van-cell title="病情描述" label="头痛，头晕，恶心"></van-cell>
+      <van-cell
+        title="患者信息"
+        :value="`${patient?.name} | ${patient?.genderValue} | ${patient?.age}岁`"
+      ></van-cell>
+      <van-cell title="病情描述" :label="illnessDesc"></van-cell>
     </van-cell-group>
     <div class="pay-schema">
       <van-checkbox>我已同意 <span class="text">支付协议</span></van-checkbox>
