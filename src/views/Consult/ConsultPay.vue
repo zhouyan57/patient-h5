@@ -1,4 +1,23 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getConsultOrderPre } from '@/services/consult'
+import { useConsultStore } from '@/stores'
+import type { ConsultOrderPreData } from '@/types/consult'
+import { showToast } from 'vant'
+import { onMounted, ref } from 'vue'
+
+// 1. 渲染订单信息
+const store = useConsultStore()
+const { type, illnessType } = store.consult
+const consult = ref<ConsultOrderPreData>()
+onMounted(async () => {
+  if (!type || !illnessType) return showToast('缺少必要的参数')
+  const res = await getConsultOrderPre({
+    type,
+    illnessType
+  })
+  consult.value = res.data
+})
+</script>
 
 <template>
   <div class="consult-pay-page">
@@ -6,7 +25,7 @@
     <cp-nav-bar title="支付" />
     <!-- 问诊区域 -->
     <div class="pay-info">
-      <p class="tit">图文问诊 49 元</p>
+      <p class="tit">图文问诊 {{ consult?.payment }} 元</p>
       <img class="img" src="@/assets/avatar-doctor.svg" />
       <p class="desc">
         <span>极速问诊</span>
@@ -16,9 +35,9 @@
 
     <!-- 支付信息区域 -->
     <van-cell-group>
-      <van-cell title="优惠券" value="-¥10.00" />
-      <van-cell title="积分抵扣" value="-¥10.00" />
-      <van-cell title="实付款" value="¥29.00" class="pay-price" />
+      <van-cell title="优惠券" :value="`-¥${consult?.couponDeduction}`" />
+      <van-cell title="积分抵扣" :value="`-¥${consult?.pointDeduction}`" />
+      <van-cell title="实付款" :value="`¥${consult?.actualPayment}`" class="pay-price" />
     </van-cell-group>
     <div class="pay-space"></div>
 
@@ -31,7 +50,12 @@
       <van-checkbox>我已同意 <span class="text">支付协议</span></van-checkbox>
     </div>
     <!-- 底部按钮区域 -->
-    <van-submit-bar button-type="primary" :price="2900" button-text="立即支付" text-align="left" />
+    <van-submit-bar
+      button-type="primary"
+      :price="consult?.actualPayment! * 100"
+      button-text="立即支付"
+      text-align="left"
+    />
   </div>
 </template>
 

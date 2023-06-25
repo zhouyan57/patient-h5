@@ -6,7 +6,9 @@ import type {
   DoctorParams,
   DoctorPage,
   FollowParams,
-  DepList
+  DepList,
+  ConsultOrderPreParams,
+  ConsultOrderPreData
 } from '@/types/consult'
 // 1. 首页-查询推荐/减脂/饮食健康/关注页面--百科文章列表
 export const getKnowledgeList = (params: KnowledgeParams) =>
@@ -25,3 +27,6 @@ export const updateFile = (file: File) => {
   fd.append('file', file)
   return request<{ id: string; url: string }>('/upload', 'POST', fd)
 }
+// 6. 问诊-支付页面-计算就诊信息和抵扣信息
+export const getConsultOrderPre = (params: ConsultOrderPreParams) =>
+  request<ConsultOrderPreData>('/patient/consult/order/pre', 'GET', params)

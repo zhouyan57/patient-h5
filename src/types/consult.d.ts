@@ -141,3 +141,28 @@ export type Dep = {
 }
 // 一级科室列表类型
 export type DepList = Dep[]
+// 支付页面-就诊信息参数类型
+export type ConsultOrderPreParams = {
+  type: ConsultType
+  illnessType?: 0 | 1
+  useCoupon?: 0 | 1
+  couponId?: string
+  docId?: string
+}
+// 支付页面-就诊信息返回值类型
+export type ConsultOrderPreData = {
+  // 问诊类型
+  type: ConsultType
+  // 极速问诊类型
+  illnessType: 0 | 1
+  // 积分抵扣
+  pointDeduction: number
+  // 优惠券抵扣
+  couponDeduction: number
+  // 优惠券ID
+  couponId: string
+  // 需付款
+  payment: number
+  // 实付款
+  actualPayment: number
+}
