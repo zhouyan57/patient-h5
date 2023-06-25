@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { Illness } from '@/types/consult'
-import { showToast, type UploaderFileListItem } from 'vant'
+import { showConfirmDialog, showToast, type UploaderFileListItem } from 'vant'
 import { computed, ref } from 'vue'
 import { updateFile } from '@/services/consult'
 import type { UploaderAfterRead } from 'vant/lib/uploader/types'
 import { useConsultStore } from '@/stores'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 // 1. 渲染结构
 // 表单数据源
@@ -52,11 +54,14 @@ const deleteImg: UploaderAfterRead = (items) => {
   form.value.pictures = form.value.pictures?.filter((item) => item.url !== items.url)
 }
 // 5. 保存数据
+const router = useRouter()
 const store = useConsultStore()
 const next = () => {
   // 判断数据合法性
   if (form.value.illnessDesc?.trim() === '') return showToast('病情描述不能为空')
   store.setIllness(form.value)
+  // 跳转到选择患者页面
+  router.push('/user/patient?isChange=1')
 }
 const disabled = computed(() => {
   return (
@@ -64,6 +69,25 @@ const disabled = computed(() => {
     form.value.illnessTime === undefined ||
     form.value.consultFlag === undefined
   )
+})
+// 6. 数据回显
+onMounted(async () => {
+  // 判断 pinia 中的 consult 模块是否存在数据
+  if (store.consult.illnessDesc) {
+    // 询问用户是否回显
+    await showConfirmDialog({
+      title: '温馨提示',
+      message: '是否恢复您之前填写的病情信息呢？',
+      closeOnPopstate: false
+    })
+    // 取出数据
+    form.value = {
+      illnessDesc: store.consult.illnessDesc,
+      illnessTime: store.consult.illnessTime,
+      consultFlag: store.consult.consultFlag,
+      pictures: store.consult.pictures
+    }
+  }
 })
 </script>
 
