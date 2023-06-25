@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { getAllDep } from '@/services/consult'
 import type { DepList } from '@/types/consult'
+import { useConsultStore } from '@/stores'
 const active = ref(0)
 // 1. 一级科室列表
 const depList = ref<DepList>([])
@@ -13,6 +14,8 @@ onMounted(async () => {
 const subDepList = computed(() => {
   return depList.value[active.value]?.child
 })
+// 3 保存科室 ID
+const store = useConsultStore()
 </script>
 
 <template>
@@ -25,9 +28,13 @@ const subDepList = computed(() => {
       </van-sidebar>
       <!-- 右侧二级科室 -->
       <div class="sub-dep">
-        <router-link to="/consult/illness" v-for="i in subDepList" :key="i.id">{{
-          i.name
-        }}</router-link>
+        <router-link
+          @click="store.setDepId(i.id)"
+          to="/consult/illness"
+          v-for="i in subDepList"
+          :key="i.id"
+          >{{ i.name }}</router-link
+        >
       </div>
     </div>
   </div>
