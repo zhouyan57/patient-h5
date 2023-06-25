@@ -57,6 +57,11 @@ const router = createRouter({
       component: () => import('@/views/User/PatientPage.vue'),
       meta: { title: '家庭档案' }
     },
+    {
+      path: '/consult/fast',
+      component: () => import('@/views/Consult/ConsultFast.vue'),
+      meta: { title: '极速问诊' }
+    },
     // 重定向
     { path: '/', redirect: '/home' }
   ]
