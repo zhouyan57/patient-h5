@@ -125,3 +125,19 @@ export type Illness = Pick<
   PartialConsult,
   'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'
 >
+// 二级科室类型
+export type SubDep = {
+  id: string
+  name: string
+  avatar: string
+}
+// 二级科室列表
+export type SubDepList = SubDep[]
+// 一级科室类型
+export type Dep = {
+  id: string
+  name: string
+  child: SubDepList
+}
+// 一级科室列表类型
+export type DepList = Dep[]
