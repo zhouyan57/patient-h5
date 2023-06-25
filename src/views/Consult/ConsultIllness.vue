@@ -43,8 +43,11 @@ const afterRead: UploaderAfterRead = async (items) => {
     items.message = '完成上传'
   }, 2000)
 }
-const deleteImg = () => {
-  console.log('deleteImg')
+const deleteImg: UploaderAfterRead = (items) => {
+  // 删除 pictures 中对应的图片
+  if (Array.isArray(items)) return
+  if (!items.url) return
+  form.value.pictures = form.value.pictures?.filter((item) => item.url !== items.url)
 }
 </script>
 
