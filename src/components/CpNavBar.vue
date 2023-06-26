@@ -38,6 +38,7 @@ const clickLeft = () => {
 <template>
   <!-- 封装一个头部组件 -->
   <van-nav-bar
+    :fixed="true"
     left-arrow
     :title="title"
     :right-text="rightText"
