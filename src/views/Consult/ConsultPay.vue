@@ -26,9 +26,12 @@ onMounted(async () => {
   const res = await getPatient(patientId)
   patient.value = res.data
 })
-// 3. 立即支付（生成订单）
+// 3. 立即支付（生成订单 & 选择支付方式）
 const agree = ref(false)
 const orderId = ref('')
+const show = ref(false)
+// 支付方式
+const paymentMethod = ref<0 | 1>()
 const pay = async () => {
   // 判断参数
   if (!agree.value) return showToast('请同意协议')
@@ -44,7 +47,8 @@ const pay = async () => {
   // 生成订单
   const res = await createConsultOrder(store.consult)
   orderId.value = res.data.id
-  console.log(orderId.value)
+  // 选择支付方式（打开支付面板）
+  show.value = true
 }
 </script>
 
@@ -90,6 +94,25 @@ const pay = async () => {
       @click="pay"
     />
   </div>
+  <!-- 支付抽屉 -->
+  <van-action-sheet v-model:show="show" title="选择支付方式">
+    <div class="pay-type">
+      <p class="amount">￥{{ consult?.actualPayment.toFixed(2) }}</p>
+      <van-cell-group>
+        <van-cell title="微信支付" @click="paymentMethod = 0">
+          <template #icon><cp-icon name="consult-wechat" /></template>
+          <template #extra><van-checkbox :checked="paymentMethod === 0" /></template>
+        </van-cell>
+        <van-cell title="支付宝支付" @click="paymentMethod = 1">
+          <template #icon><cp-icon name="consult-alipay" /></template>
+          <template #extra><van-checkbox :checked="paymentMethod === 1" /></template>
+        </van-cell>
+      </van-cell-group>
+      <div class="btn">
+        <van-button type="primary" round block>立即支付</van-button>
+      </div>
+    </div>
+  </van-action-sheet>
 </template>
 
 <style lang="scss" scoped>
@@ -154,6 +177,27 @@ const pay = async () => {
   .van-submit-bar__button {
     font-weight: normal;
     width: 160px;
+  }
+}
+.pay-type {
+  .amount {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .btn {
+    padding: 15px;
+  }
+  .van-cell {
+    align-items: center;
+    .cp-icon {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    .van-checkbox :deep(.van-checkbox__icon) {
+      font-size: 16px;
+    }
   }
 }
 </style>
