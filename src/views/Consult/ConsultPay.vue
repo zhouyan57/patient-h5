@@ -26,7 +26,7 @@ onMounted(async () => {
   const res = await getPatient(patientId)
   patient.value = res.data
 })
-// 3. 立即支付（生成订单 & 选择支付方式）
+// 3. 立即支付（生成订单 & 选择支付方式 & 清除问诊信息）
 const agree = ref(false)
 const orderId = ref('')
 const show = ref(false)
@@ -49,6 +49,8 @@ const pay = async () => {
   orderId.value = res.data.id
   // 选择支付方式（打开支付面板）
   show.value = true
+  // 清除问诊信息
+  store.removeConsult()
 }
 </script>
 
