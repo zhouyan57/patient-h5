@@ -6,13 +6,14 @@ import io from 'socket.io-client'
 import { BASEURL } from '@/utils/request'
 import { useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
+import { onUnmounted } from 'vue'
 // 1. 使用 websocket 来连接服务器
 const userStore = useUserStore()
 const route = useRoute()
 // 与服务端建立连接
 const socket = io(BASEURL, {
   auth: {
-    token: userStore.user.token
+    token: `Bearer ${userStore.user?.token}`
   },
   query: {
     orderId: route.query.orderId
@@ -22,6 +23,18 @@ const socket = io(BASEURL, {
 // 建立连接成功的回调
 socket.on('connect', () => {
   console.log('连接成功')
+})
+// 监听断开连接
+socket.on('disconnect', () => {
+  console.log('断开连接')
+})
+// 监听错误的事件
+socket.on('error', (e) => {
+  console.log('出错了', e)
+})
+// 关闭页面断开连接
+onUnmounted(() => {
+  socket.close()
 })
 </script>
 
