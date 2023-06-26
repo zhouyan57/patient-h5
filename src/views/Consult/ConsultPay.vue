@@ -2,17 +2,37 @@
 import { getConsultOrderPre, createConsultOrder, payConsultOrder } from '@/services/consult'
 import { useConsultStore } from '@/stores'
 import type { ConsultOrderPreData } from '@/types/consult'
-import { showToast } from 'vant'
+import { showDialog, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import { getPatient } from '@/services/user'
 import type { Patient } from '@/types/user'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
 // 1. 渲染订单信息
 const store = useConsultStore()
 const { type, illnessType, patientId, illnessDesc, illnessTime, consultFlag } = store.consult
 const consult = ref<ConsultOrderPreData>()
+const router = useRouter()
 onMounted(async () => {
-  if (!type || !illnessType) return showToast('缺少必要的参数')
+  // 6. 处理在当前页面的刷新逻辑(生成订单后数据清空，需要回退到首页)
+  if (
+    !type ||
+    illnessType === undefined ||
+    !patientId ||
+    !illnessDesc ||
+    illnessTime === undefined ||
+    consultFlag === undefined
+  ) {
+    {
+      // 提示问题信息不存在
+      await showDialog({
+        title: '温馨提示',
+        message: '支付信息不完整请重新填写，如果未支付，可以去记录继续支付'
+      })
+      return router.push('/home')
+    }
+  }
+
   const res = await getConsultOrderPre({
     type,
     illnessType
@@ -66,6 +86,11 @@ const submit = async () => {
   // 根据路径进行跳转
   window.location.href = res.data.payUrl
 }
+
+// 5. 生成订单后页面不可回退
+onBeforeRouteLeave(() => {
+  if (orderId.value) return false
+})
 </script>
 
 <template>
@@ -111,7 +136,13 @@ const submit = async () => {
     />
   </div>
   <!-- 支付抽屉 -->
-  <van-action-sheet v-model:show="show" title="选择支付方式">
+  <van-action-sheet
+    :close-on-popstate="false"
+    :closeable="false"
+    :close-on-click-overlay="false"
+    v-model:show="show"
+    title="选择支付方式"
+  >
     <div class="pay-type">
       <p class="amount">￥{{ consult?.actualPayment.toFixed(2) }}</p>
       <van-cell-group>
