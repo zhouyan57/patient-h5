@@ -1,35 +1,50 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { MsgType } from '@/enums'
+import type { Message } from '@/types/room'
+
+// 1.0 接收数据源
+defineProps<{
+  list: Message[]
+}>()
+</script>
 
 <template>
-  <!-- 病情描述 -->
-  <div class="msg msg-illness">
-    <div class="patient van-hairline--bottom">
-      <p>李富贵 男 31岁</p>
-      <p>一周内 | 未去医院就诊</p>
+  <div v-for="(item, index) in list" :key="index">
+    <!-- 通知 -->
+    <div class="msg msg-tip" v-if="item.msgType === MsgType.Notify">
+      <div class="content">
+        <span>{{ item.msg.content }}</span>
+      </div>
     </div>
-    <van-row>
-      <van-col span="6">病情描述</van-col>
-      <van-col span="18">头痛、头晕、恶心</van-col>
-      <van-col span="6">图片</van-col>
-      <van-col span="18">点击查看</van-col>
-    </van-row>
+
+    <!-- 病情描述 -->
+    <div class="msg msg-illness" v-if="item.msgType === MsgType.CardPat">
+      <div class="patient van-hairline--bottom">
+        <p>
+          {{ item.msg.consultRecord?.patientInfo.name }}
+          {{ item.msg.consultRecord?.patientInfo.genderValue }}
+          {{ item.msg.consultRecord?.patientInfo.age }}岁
+        </p>
+        <p>{{ item.msg.consultRecord?.illnessTime }} | {{ item.msg.consultRecord?.consultFlag }}</p>
+      </div>
+      <van-row>
+        <van-col span="6">病情描述</van-col>
+        <van-col span="18">{{ item.msg.consultRecord?.illnessDesc }}</van-col>
+        <van-col span="6">图片</van-col>
+        <van-col span="18">点击查看</van-col>
+      </van-row>
+    </div>
+
+    <!-- 温馨提示 -->
+    <div class="msg msg-tip" v-if="item.msgType === MsgType.NotifyTip">
+      <div class="content">
+        <span class="green">温馨提示：</span>
+        <span>{{ item.msg.content }}</span>
+      </div>
+    </div>
   </div>
 
-  <!-- 温馨提示-通知 -->
-  <div class="msg msg-tip">
-    <div class="content">
-      <span class="green">温馨提示：</span>
-      <span>在线咨询不能代替面诊，医护人员建议仅供参考</span>
-    </div>
-  </div>
-
-  <!-- 通知 -->
-  <div class="msg msg-tip">
-    <div class="content">
-      <span>医护人员正在赶来，请耐心等候</span>
-    </div>
-  </div>
-
+  <!-- ------------------------- -->
   <!-- 发送文字 -->
   <div class="msg msg-to">
     <div class="content">

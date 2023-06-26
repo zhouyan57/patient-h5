@@ -32,6 +32,8 @@ socket.on('connect', () => {
   const defaultArr: Message[] = []
   socket.on('chatMsgList', (res: { data: TimeMessages[] }) => {
     // 得到返回消息的时间，生成为一条信息
+    console.log('chatMsgList', res.data)
+
     defaultArr.push({
       msgType: MsgType.Notify,
       createTime: res.data[0].createTime,
@@ -65,7 +67,7 @@ onUnmounted(() => {
     <!-- 状态栏 -->
     <RoomStatus></RoomStatus>
     <!-- 消息卡片 -->
-    <room-message></room-message>
+    <room-message :list="list"></room-message>
     <!-- 操作栏 -->
     <RoomAction></RoomAction>
   </div>
