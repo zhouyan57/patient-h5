@@ -2,6 +2,27 @@
 import RoomStatus from './components/RoomStatus.vue'
 import RoomAction from './components/RoomAction.vue'
 import RoomMessage from './components/RoomMessage.vue'
+import io from 'socket.io-client'
+import { BASEURL } from '@/utils/request'
+import { useUserStore } from '@/stores'
+import { useRoute } from 'vue-router'
+// 1. 使用 websocket 来连接服务器
+const userStore = useUserStore()
+const route = useRoute()
+// 与服务端建立连接
+const socket = io(BASEURL, {
+  auth: {
+    token: userStore.user.token
+  },
+  query: {
+    orderId: route.query.orderId
+  }
+})
+
+// 建立连接成功的回调
+socket.on('connect', () => {
+  console.log('连接成功')
+})
 </script>
 
 <template>
