@@ -8,7 +8,8 @@ import type {
   FollowParams,
   DepList,
   ConsultOrderPreParams,
-  ConsultOrderPreData
+  ConsultOrderPreData,
+  PartialConsult
 } from '@/types/consult'
 // 1. 首页-查询推荐/减脂/饮食健康/关注页面--百科文章列表
 export const getKnowledgeList = (params: KnowledgeParams) =>
@@ -30,3 +31,6 @@ export const updateFile = (file: File) => {
 // 6. 问诊-支付页面-计算就诊信息和抵扣信息
 export const getConsultOrderPre = (params: ConsultOrderPreParams) =>
   request<ConsultOrderPreData>('/patient/consult/order/pre', 'GET', params)
+// 7. 问诊-保存/修改问诊订单
+export const createConsultOrder = (data: PartialConsult) =>
+  request<{ id: string }>('/patient/consult/order', 'POST', data)

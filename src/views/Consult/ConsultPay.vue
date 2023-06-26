@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getConsultOrderPre } from '@/services/consult'
+import { getConsultOrderPre, createConsultOrder } from '@/services/consult'
 import { useConsultStore } from '@/stores'
 import type { ConsultOrderPreData } from '@/types/consult'
 import { showToast } from 'vant'
@@ -9,7 +9,7 @@ import type { Patient } from '@/types/user'
 
 // 1. 渲染订单信息
 const store = useConsultStore()
-const { type, illnessType, patientId, illnessDesc } = store.consult
+const { type, illnessType, patientId, illnessDesc, illnessTime, consultFlag } = store.consult
 const consult = ref<ConsultOrderPreData>()
 onMounted(async () => {
   if (!type || !illnessType) return showToast('缺少必要的参数')
@@ -26,6 +26,26 @@ onMounted(async () => {
   const res = await getPatient(patientId)
   patient.value = res.data
 })
+// 3. 立即支付（生成订单）
+const agree = ref(false)
+const orderId = ref('')
+const pay = async () => {
+  // 判断参数
+  if (!agree.value) return showToast('请同意协议')
+  if (
+    type === undefined ||
+    illnessType === undefined ||
+    patientId === undefined ||
+    illnessDesc === undefined ||
+    illnessTime === undefined ||
+    consultFlag === undefined
+  )
+    return showToast('参数缺失')
+  // 生成订单
+  const res = await createConsultOrder(store.consult)
+  orderId.value = res.data.id
+  console.log(orderId.value)
+}
 </script>
 
 <template>
@@ -59,7 +79,7 @@ onMounted(async () => {
       <van-cell title="病情描述" :label="illnessDesc"></van-cell>
     </van-cell-group>
     <div class="pay-schema">
-      <van-checkbox>我已同意 <span class="text">支付协议</span></van-checkbox>
+      <van-checkbox v-model="agree">我已同意 <span class="text">支付协议</span></van-checkbox>
     </div>
     <!-- 底部按钮区域 -->
     <van-submit-bar
@@ -67,6 +87,7 @@ onMounted(async () => {
       :price="consult?.actualPayment! * 100"
       button-text="立即支付"
       text-align="left"
+      @click="pay"
     />
   </div>
 </template>
