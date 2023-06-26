@@ -1,11 +1,45 @@
 <script setup lang="ts">
 import { MsgType } from '@/enums'
+import type { Image } from '@/types/consult'
 import type { Message } from '@/types/room'
-
-// 1.0 接收数据源
+import { showImagePreview, showToast } from 'vant'
+// 1. 接收数据源
 defineProps<{
   list: Message[]
 }>()
+
+// 2. 预览图片
+const imagePreview = (images: Image[] | undefined) => {
+  if (!images || images.length === 0) return showToast('暂无图片')
+  // 从数据源中将所有的图片提取路径
+  const newImages = images.map((item) => item.url)
+  // 开启预览
+  showImagePreview(newImages)
+}
+
+// 3. 修改患病时间 & 是否就诊
+// 患病时间选项
+const timeOptions = [
+  { label: '一周内', value: 1 },
+  { label: '一月内', value: 2 },
+  { label: '半年内', value: 3 },
+  { label: '大于半年', value: 4 }
+]
+// 是否就诊
+const flagOptions = [
+  { label: '就诊过', value: 1 },
+  { label: '没就诊过', value: 0 }
+]
+// 根据 value 得到患者的 label
+const getTimeLabel = (value: number | undefined) => {
+  if (value === undefined) return
+  return timeOptions.find((item) => item.value === value)?.label
+}
+// 根据 value 得到是否就诊的 label
+const getFlagLabel = (value: number | undefined) => {
+  if (value === undefined) return
+  return flagOptions.find((item) => item.value === value)?.label
+}
 </script>
 
 <template>
@@ -25,13 +59,18 @@ defineProps<{
           {{ item.msg.consultRecord?.patientInfo.genderValue }}
           {{ item.msg.consultRecord?.patientInfo.age }}岁
         </p>
-        <p>{{ item.msg.consultRecord?.illnessTime }} | {{ item.msg.consultRecord?.consultFlag }}</p>
+        <p>
+          {{ getTimeLabel(item.msg.consultRecord?.illnessTime) }} |
+          {{ getFlagLabel(item.msg.consultRecord?.consultFlag) }}
+        </p>
       </div>
       <van-row>
         <van-col span="6">病情描述</van-col>
         <van-col span="18">{{ item.msg.consultRecord?.illnessDesc }}</van-col>
         <van-col span="6">图片</van-col>
-        <van-col span="18">点击查看</van-col>
+        <van-col span="18" @click="imagePreview(item.msg.consultRecord?.pictures)"
+          >点击查看</van-col
+        >
       </van-row>
     </div>
 
