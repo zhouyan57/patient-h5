@@ -2,7 +2,7 @@
 import { getConsultOrderPre, createConsultOrder, payConsultOrder } from '@/services/consult'
 import { useConsultStore } from '@/stores'
 import type { ConsultOrderPreData } from '@/types/consult'
-import { showDialog, showToast } from 'vant'
+import { showConfirmDialog, showDialog, showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import { getPatient } from '@/services/user'
 import type { Patient } from '@/types/user'
@@ -91,6 +91,26 @@ const submit = async () => {
 onBeforeRouteLeave(() => {
   if (orderId.value) return false
 })
+
+// 7. 关闭支付页面
+const beforeClose = () => {
+  // 询问用户是否关闭
+  showConfirmDialog({
+    title: '关闭支付',
+    message: '取消支付无法获得医生回复，医生接诊名额有限，是否确认关闭？',
+    cancelButtonText: '仍要关闭',
+    confirmButtonText: '继续支付'
+  })
+    .then(() => {
+      return false
+    })
+    .catch(() => {
+      // 清除订单 id
+      orderId.value = ''
+      // 跳转到 home
+      router.push('/home')
+    })
+}
 </script>
 
 <template>
@@ -139,7 +159,8 @@ onBeforeRouteLeave(() => {
   <van-action-sheet
     :close-on-popstate="false"
     :closeable="false"
-    :close-on-click-overlay="false"
+    :close-on-click-overlay="true"
+    :beforeClose="beforeClose"
     v-model:show="show"
     title="选择支付方式"
   >
