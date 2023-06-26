@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getConsultOrderPre, createConsultOrder } from '@/services/consult'
+import { getConsultOrderPre, createConsultOrder, payConsultOrder } from '@/services/consult'
 import { useConsultStore } from '@/stores'
 import type { ConsultOrderPreData } from '@/types/consult'
 import { showToast } from 'vant'
@@ -51,6 +51,20 @@ const pay = async () => {
   show.value = true
   // 清除问诊信息
   store.removeConsult()
+}
+// 4. 立即支付（获取支付页面的路径）
+const submit = async () => {
+  // 判断是否存在订单 id & 请求方式
+  if (!orderId.value) return showToast('订单 ID 不存在')
+  if (paymentMethod.value === undefined) return showToast('请选择支付方式')
+  // 获取支付路径
+  const res = await payConsultOrder({
+    paymentMethod: paymentMethod.value,
+    orderId: orderId.value,
+    payCallback: 'http://localhost:5173/room'
+  })
+  // 根据路径进行跳转
+  window.location.href = res.data.payUrl
 }
 </script>
 
@@ -111,7 +125,7 @@ const pay = async () => {
         </van-cell>
       </van-cell-group>
       <div class="btn">
-        <van-button type="primary" round block>立即支付</van-button>
+        <van-button @click="submit" type="primary" round block>立即支付</van-button>
       </div>
     </div>
   </van-action-sheet>
