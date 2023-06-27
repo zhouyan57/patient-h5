@@ -1,9 +1,23 @@
 <script lang="ts" setup>
 import { MsgType } from '@/enums'
+import type { ConsultOrderItem } from '@/types/consult'
+import { inject, ref, type Ref } from 'vue'
+import { useRoute } from 'vue-router'
 
+// 1. 接收评价状态
 defineProps<{
   type: MsgType
 }>()
+
+// 2. 评论医生（准备参数）
+// 订单详情（为获取医生id）
+const orderDetail = inject<Ref<ConsultOrderItem>>('orderDetail')
+// 订单 id
+const route = useRoute()
+const orderId = route.query.orderId
+const score = ref(0)
+const content = ref('')
+const anonymousFlag = ref(0)
 </script>
 <template>
   <!-- 显示评价 -->
@@ -38,7 +52,11 @@ defineProps<{
       placeholder="请描述您对医生的评价或是在医生看诊过程中遇到的问题"
     ></van-field>
     <div class="footer">
-      <van-checkbox>匿名评价</van-checkbox>
+      <van-checkbox
+        :model-value="anonymousFlag"
+        @update:model-value="anonymousFlag = $event ? 1 : 0"
+        >匿名评价
+      </van-checkbox>
       <van-button type="primary" size="small" round> 提交评价 </van-button>
     </div>
   </div>

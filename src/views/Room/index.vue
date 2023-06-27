@@ -6,7 +6,7 @@ import io from 'socket.io-client'
 import { BASEURL } from '@/utils/request'
 import { useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, provide } from 'vue'
 import type { Message, TimeMessages } from '@/types/room'
 import { MsgType } from '@/enums/index'
 import { getConsultOrderDetail } from '@/services/consult'
@@ -133,6 +133,9 @@ const refresh = () => {
   loading.value = false
   isHistory.value = true
 }
+
+// 7. 向后代组件传参
+provide('orderDetail', orderDetail)
 </script>
 
 <template>
