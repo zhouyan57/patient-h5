@@ -1,13 +1,30 @@
 <script setup lang="ts">
+import { showToast } from 'vant'
+import { ref } from 'vue'
 // 1. 接收数据
 defineProps<{
   disabled: boolean
 }>()
+// 2. 发送消息
+const emit = defineEmits<{
+  (e: 'send-text', v: string): void
+}>()
+const value = ref('')
+const submit = () => {
+  // 将输入框中的内容提交到 room 中
+  if (!value.value || value.value.trim() === '') return showToast('内容不能为空')
+  // 返回数据
+  emit('send-text', value.value)
+  // 清除输入框
+  value.value = ''
+}
 </script>
 
 <template>
   <div class="room-action">
     <van-field
+      v-model="value"
+      @keyup.enter="submit"
       type="text"
       class="input"
       :border="false"

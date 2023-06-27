@@ -79,6 +79,19 @@ onMounted(async () => {
     await getOrderDetail()
   })
 })
+
+// 3. 发送消息
+// 在事件通过 socket.emit 的 sendChatMsg 发送文字给服务器
+const sendText = (v: string) => {
+  socket.emit('sendChatMsg', {
+    from: userStore.user?.id,
+    to: orderDetail.value?.docInfo?.id,
+    msgType: MsgType.MsgText,
+    msg: {
+      content: v
+    }
+  })
+}
 </script>
 
 <template>
@@ -89,7 +102,10 @@ onMounted(async () => {
     <!-- 消息卡片 -->
     <room-message :list="list"></room-message>
     <!-- 操作栏 -->
-    <RoomAction :disabled="orderDetail?.status !== OrderType.ConsultChat"></RoomAction>
+    <RoomAction
+      @send-text="sendText"
+      :disabled="orderDetail?.status !== OrderType.ConsultChat"
+    ></RoomAction>
   </div>
 </template>
 
