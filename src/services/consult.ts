@@ -45,3 +45,7 @@ export const payConsultOrder = (data: {
 // 9. 问诊-查询订单详情信息-找医生、极速问诊和开药问诊
 export const getConsultOrderDetail = (orderId: string) =>
   request<ConsultOrderItem>('/patient/consult/order/detail', 'GET', { orderId })
+
+// 10. 药品订单-根据处方ID查询处方单
+export const getPrescriptionUrl = (id: string) =>
+  request<{ url: string }>(`/patient/consult/prescription/${id}`)
