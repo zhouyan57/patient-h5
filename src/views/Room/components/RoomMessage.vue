@@ -3,6 +3,8 @@ import { MsgType } from '@/enums'
 import type { Image } from '@/types/consult'
 import type { Message } from '@/types/room'
 import { showImagePreview, showToast } from 'vant'
+import { useUserStore } from '@/stores'
+import dayjs from 'dayjs'
 // 1. 接收数据源
 defineProps<{
   list: Message[]
@@ -45,6 +47,9 @@ const getFlagLabel = (value: number | undefined) => {
 const FormatTime = (time: string) => {
   return dayjs(time).format('hh:mm')
 }
+
+// 5. 获取 store 对象
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -87,13 +92,26 @@ const FormatTime = (time: string) => {
       </div>
     </div>
 
-    <!-- 发送文字 -->
-    <div class="msg msg-to" v-if="item.msgType === MsgType.MsgText">
-      <div class="content">
-        <div class="time">{{ FormatTime(item.createTime) }}</div>
-        <div class="pao">{{ item.msg.content }}</div>
+    <div v-if="item.msgType === MsgType.MsgText">
+      <!-- 发送文字 -->
+      <div class="msg msg-to" v-if="item.from === userStore.user?.id">
+        <div class="content">
+          <div class="time">{{ FormatTime(item.createTime) }}</div>
+          <div class="pao">{{ item.msg.content }}</div>
+        </div>
+        <van-image :src="item.fromAvatar" />
       </div>
-      <van-image :src="item.fromAvatar" />
+
+      <!-- 接收文字 -->
+      <div class="msg msg-from" v-else>
+        <van-image
+          src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
+        />
+        <div class="content">
+          <div class="time">{{ FormatTime(item.createTime) }}</div>
+          <div class="pao">{{ item.msg.content }}</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -109,15 +127,6 @@ const FormatTime = (time: string) => {
       />
     </div>
     <van-image src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg" />
-  </div>
-
-  <!-- 接收文字 -->
-  <div class="msg msg-from">
-    <van-image src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg" />
-    <div class="content">
-      <div class="time">20:12</div>
-      <div class="pao">哪里不舒服</div>
-    </div>
   </div>
 
   <!-- 接收图片 -->
