@@ -7,6 +7,8 @@ import { useUserStore } from '@/stores'
 import dayjs from 'dayjs'
 import { getPrescriptionUrl } from '@/services/consult'
 import { useRouter } from 'vue-router'
+import EvaluateCard from './EvaluateCard.vue'
+
 // 1. 接收数据源
 const props = defineProps<{
   list: Message[]
@@ -193,6 +195,15 @@ const buy = (pre: Prescription | undefined) => {
         </div>
         <div class="foot" @click="buy(item.msg.prescription)"><span>购买药品</span></div>
       </div>
+    </div>
+
+    <!-- 医生评价 -->
+    <div
+      class="msg"
+      v-if="item.msgType === MsgType.CardEvaForm || item.msgType === MsgType.CardEva"
+    >
+      <!-- 评论信息 -->
+      <EvaluateCard :type="item.msgType"></EvaluateCard>
     </div>
   </div>
 
