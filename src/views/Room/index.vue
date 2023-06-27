@@ -12,6 +12,7 @@ import { MsgType } from '@/enums/index'
 import { getConsultOrderDetail } from '@/services/consult'
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
+import dayjs from 'dayjs'
 // 1. 使用 websocket 来连接服务器
 const userStore = useUserStore()
 const route = useRoute()
@@ -92,6 +93,12 @@ const sendText = (v: string) => {
     }
   })
 }
+
+// 4. 接收消息
+socket.on('receiveChatMsg', (e: Message) => {
+  // 将接收到的消息添加到消息列表中
+  list.value.push(e)
+})
 </script>
 
 <template>

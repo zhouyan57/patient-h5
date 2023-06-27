@@ -40,6 +40,11 @@ const getFlagLabel = (value: number | undefined) => {
   if (value === undefined) return
   return flagOptions.find((item) => item.value === value)?.label
 }
+
+// 4. 处理时间
+const FormatTime = (time: string) => {
+  return dayjs(time).format('hh:mm')
+}
 </script>
 
 <template>
@@ -81,17 +86,18 @@ const getFlagLabel = (value: number | undefined) => {
         <span>{{ item.msg.content }}</span>
       </div>
     </div>
+
+    <!-- 发送文字 -->
+    <div class="msg msg-to" v-if="item.msgType === MsgType.MsgText">
+      <div class="content">
+        <div class="time">{{ FormatTime(item.createTime) }}</div>
+        <div class="pao">{{ item.msg.content }}</div>
+      </div>
+      <van-image :src="item.fromAvatar" />
+    </div>
   </div>
 
   <!-- ------------------------- -->
-  <!-- 发送文字 -->
-  <div class="msg msg-to">
-    <div class="content">
-      <div class="time">20:12</div>
-      <div class="pao">大夫你好？</div>
-    </div>
-    <van-image src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg" />
-  </div>
 
   <!-- 发送图片 -->
   <div class="msg msg-to">
