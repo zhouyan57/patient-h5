@@ -9,6 +9,8 @@ import { useRoute } from 'vue-router'
 import { onUnmounted, ref } from 'vue'
 import type { Message, TimeMessages } from '@/types/room'
 import { MsgType } from '@/enums/index'
+import { getConsultOrderDetail } from '@/services/consult'
+import type { ConsultOrderItem } from '@/types/consult'
 // 1. 使用 websocket 来连接服务器
 const userStore = useUserStore()
 const route = useRoute()
@@ -58,6 +60,18 @@ socket.on('error', (e) => {
 // 关闭页面断开连接
 onUnmounted(() => {
   socket.close()
+})
+
+// 2. 获取订单状态
+// 保存订单数据
+const orderDetail = ref<ConsultOrderItem>()
+// 获取订单信息
+const getOrderDetail = async () => {
+  const res = await getConsultOrderDetail(route.query.orderId as string)
+  orderDetail.value = res.data
+}
+onMounted(async () => {
+  await getOrderDetail()
 })
 </script>
 

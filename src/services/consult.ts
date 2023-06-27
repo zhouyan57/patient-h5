@@ -9,7 +9,8 @@ import type {
   DepList,
   ConsultOrderPreParams,
   ConsultOrderPreData,
-  PartialConsult
+  PartialConsult,
+  ConsultOrderItem
 } from '@/types/consult'
 // 1. 首页-查询推荐/减脂/饮食健康/关注页面--百科文章列表
 export const getKnowledgeList = (params: KnowledgeParams) =>
@@ -35,9 +36,12 @@ export const getConsultOrderPre = (params: ConsultOrderPreParams) =>
 export const createConsultOrder = (data: PartialConsult) =>
   request<{ id: string }>('/patient/consult/order', 'POST', data)
 // 8. 订单-支付接口
-// 8.0 订单-支付接口
 export const payConsultOrder = (data: {
   paymentMethod: number
   orderId: string
   payCallback: string
 }) => request<{ payUrl: string }>('/patient/consult/pay', 'POST', data)
+
+// 9. 问诊-查询订单详情信息-找医生、极速问诊和开药问诊
+export const getConsultOrderDetail = (orderId: string) =>
+  request<ConsultOrderItem>('/patient/consult/order/detail', 'GET', { orderId })
