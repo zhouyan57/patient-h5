@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { showToast } from 'vant'
+import { UploaderAfterRead } from 'vant/lib/uploader/types'
 import { ref } from 'vue'
+import { updateFile } from '@/services/consult'
+
 // 1. 接收数据
 defineProps<{
   disabled: boolean
@@ -8,6 +11,7 @@ defineProps<{
 // 2. 发送消息
 const emit = defineEmits<{
   (e: 'send-text', v: string): void
+  (e: 'send-img', img: { id: string; url: string }): void
 }>()
 const value = ref('')
 const submit = () => {
@@ -17,6 +21,16 @@ const submit = () => {
   emit('send-text', value.value)
   // 清除输入框
   value.value = ''
+}
+// 3. 发送图片
+const afterRead: UploaderAfterRead = async (item) => {
+  // 排除数组情况
+  if (Array.isArray(item)) return
+  // 判断图片是否为空
+  if (!item.file) return
+  // 上传图片到服务器
+  const res = await updateFile(item.file)
+  emit('send-img', res.data)
 }
 </script>
 
@@ -32,7 +46,7 @@ const submit = () => {
       autocomplete="off"
       :disabled="disabled"
     ></van-field>
-    <van-uploader :preview-image="false">
+    <van-uploader :after-read="afterRead" :preview-image="false">
       <cp-icon name="consult-img" />
     </van-uploader>
   </div>

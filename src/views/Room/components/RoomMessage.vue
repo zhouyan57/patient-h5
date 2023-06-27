@@ -113,31 +113,30 @@ const userStore = useUserStore()
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ------------------------- -->
-
-  <!-- 发送图片 -->
-  <div class="msg msg-to">
-    <div class="content">
-      <div class="time">20:12</div>
-      <van-image
-        fit="contain"
-        src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg"
-      />
-    </div>
-    <van-image src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg" />
-  </div>
-
-  <!-- 接收图片 -->
-  <div class="msg msg-from">
-    <van-image src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg" />
-    <div class="content">
-      <div class="time">20:12</div>
-      <van-image src="https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/popular_3.jpg" />
+    <div v-if="item.msgType === MsgType.MsgImage">
+      <!-- 发送图片 -->
+      <div class="msg msg-to" v-if="item.from === userStore.user?.id">
+        <div class="content">
+          <div class="time">{{ FormatTime(item.createTime) }}</div>
+          <van-image fit="contain" :src="item.msg.picture?.url" />
+        </div>
+        <van-image :src="item.fromAvatar" />
+      </div>
+      <!-- 接收图片 -->
+      <div class="msg msg-from" v-else>
+        <van-image
+          src="https://img1.baidu.com/it/u=2301129870,1976278379&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"
+        />
+        <div class="content">
+          <div class="time">{{ FormatTime(item.createTime) }}</div>
+          <van-image fit="contain" :src="item.msg.picture?.url" />
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- ---------------------------------- -->
   <!-- 处方消息 -->
   <div class="msg msg-recipe">
     <div class="content">

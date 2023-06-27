@@ -99,6 +99,19 @@ socket.on('receiveChatMsg', (e: Message) => {
   // 将接收到的消息添加到消息列表中
   list.value.push(e)
 })
+
+// 5. 发送消息（图片)
+// 在事件通过 socket.emit 的 sendChatMsg 发送图片给服务器
+const sendImg = (v: { id: string; url: string }) => {
+  socket.emit('sendChatMsg', {
+    from: userStore.user?.id,
+    to: orderDetail.value?.docInfo?.id,
+    msgType: MsgType.MsgImage,
+    msg: {
+      picture: v
+    }
+  })
+}
 </script>
 
 <template>
@@ -111,6 +124,7 @@ socket.on('receiveChatMsg', (e: Message) => {
     <!-- 操作栏 -->
     <RoomAction
       @send-text="sendText"
+      @send-img="sendImg"
       :disabled="orderDetail?.status !== OrderType.ConsultChat"
     ></RoomAction>
   </div>
