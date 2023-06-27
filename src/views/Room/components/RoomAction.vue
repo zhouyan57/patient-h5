@@ -1,4 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// 1. 接收数据
+defineProps<{
+  disabled: boolean
+}>()
+</script>
 
 <template>
   <div class="room-action">
@@ -8,6 +13,7 @@
       :border="false"
       placeholder="问医生"
       autocomplete="off"
+      :disabled="disabled"
     ></van-field>
     <van-uploader :preview-image="false">
       <cp-icon name="consult-img" />

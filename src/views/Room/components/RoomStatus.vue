@@ -1,13 +1,29 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { OrderType } from '@/enums'
+
+// 1. 接收数据
+defineProps<{
+  status: OrderType
+  time: number
+}>()
+</script>
 
 <template>
   <div class="room-status">
-    <div class="wait">已通知医生尽快接诊，24小时内医生未回复将自动退款</div>
-    <!-- <div class="chat">
+    <div class="wait" v-if="status === OrderType.ConsultWait">
+      已通知医生尽快接诊，24小时内医生未回复将自动退款
+    </div>
+    <div class="chat" v-if="status === OrderType.ConsultChat">
       <span>咨询中</span>
-      <span>剩余时间：23:10:34</span>
-    </div> -->
-    <!-- <div class="end"><van-icon name="passed" /> 已结束</div> -->
+      <van-count-down :time="time ? time * 1000 : 0" />
+    </div>
+    <div class="end">
+      <van-icon
+        name="passed"
+        v-if="status === OrderType.ConsultComplete || status === OrderType.ConsultCancel"
+      />
+      已结束
+    </div>
   </div>
 </template>
 

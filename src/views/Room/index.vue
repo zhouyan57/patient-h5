@@ -11,6 +11,7 @@ import type { Message, TimeMessages } from '@/types/room'
 import { MsgType } from '@/enums/index'
 import { getConsultOrderDetail } from '@/services/consult'
 import type { ConsultOrderItem } from '@/types/consult'
+import { OrderType } from '@/enums'
 // 1. 使用 websocket 来连接服务器
 const userStore = useUserStore()
 const route = useRoute()
@@ -79,11 +80,11 @@ onMounted(async () => {
   <div class="room-page">
     <cp-nav-bar title="问诊室" />
     <!-- 状态栏 -->
-    <RoomStatus></RoomStatus>
+    <RoomStatus :status="orderDetail?.status" :time="orderDetail?.countdown"></RoomStatus>
     <!-- 消息卡片 -->
     <room-message :list="list"></room-message>
     <!-- 操作栏 -->
-    <RoomAction></RoomAction>
+    <RoomAction :disabled="orderDetail?.status !== OrderType.ConsultChat"></RoomAction>
   </div>
 </template>
 
