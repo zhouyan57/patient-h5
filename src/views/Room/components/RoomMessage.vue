@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { MsgType } from '@/enums'
+import { MsgType, PrescriptionStatus } from '@/enums'
 import type { Image } from '@/types/consult'
-import type { Message } from '@/types/room'
+import type { Message, Prescription } from '@/types/room'
 import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores'
 import dayjs from 'dayjs'
 import { getPrescriptionUrl } from '@/services/consult'
+import { useRouter } from 'vue-router'
 // 1. 接收数据源
 const props = defineProps<{
   list: Message[]
@@ -66,6 +67,18 @@ const checkPre = async (id: string | undefined) => {
   const res = await getPrescriptionUrl(id)
   // 展示图片
   showImagePreview([res.data.url])
+}
+
+// 8. 购买药品
+const router = useRouter()
+const buy = (pre: Prescription | undefined) => {
+  if (!pre) return showToast('处方不存在')
+  if (pre.status === PrescriptionStatus.NotPayment && pre.orderId)
+    // 跳转到订单详情页面进行付款
+    return router.push(`/order/${pre.orderId}`)
+  if (pre.status === PrescriptionStatus.NotPayment && !pre.orderId)
+    // 跳转到预支付页面
+    return router.push(`/order/pay?id=${pre.id}`)
 }
 </script>
 
@@ -178,7 +191,7 @@ const checkPre = async (id: string | undefined) => {
             <div class="num">x{{ i.quantity }}</div>
           </div>
         </div>
-        <div class="foot"><span>购买药品</span></div>
+        <div class="foot" @click="buy(item.msg.prescription)"><span>购买药品</span></div>
       </div>
     </div>
   </div>
