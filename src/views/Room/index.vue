@@ -33,6 +33,9 @@ socket.on('connect', () => {
   // 2. 获取默认聊天记录
   // 定义默认聊天记录数组
   socket.on('chatMsgList', (res: { data: TimeMessages[] }) => {
+    // 将所有消息设置为已读
+    const msgList = res.data[0].items
+    socket.emit('updateMsgStatus', msgList[msgList.length - 1].id)
     const defaultArr: Message[] = []
     // 得到聊天记录的时间
     time.value = res.data[0].createTime
@@ -102,6 +105,8 @@ socket.on('receiveChatMsg', async (e: Message) => {
   await nextTick()
   // 滚动到底部
   window.scrollTo(0, document.body.scrollHeight)
+  // 将消息设置为已读
+  socket.emit('updateMsgStatus', e.id)
 })
 
 // 5. 发送消息（图片)
