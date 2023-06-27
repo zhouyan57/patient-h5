@@ -50,6 +50,11 @@ const FormatTime = (time: string) => {
 
 // 5. 获取 store 对象
 const userStore = useUserStore()
+
+// 6. 图片加载完毕之后滚动到底部
+const load = () => {
+  window.scrollTo(0, document.body.scrollHeight)
+}
 </script>
 
 <template>
@@ -119,7 +124,7 @@ const userStore = useUserStore()
       <div class="msg msg-to" v-if="item.from === userStore.user?.id">
         <div class="content">
           <div class="time">{{ FormatTime(item.createTime) }}</div>
-          <van-image fit="contain" :src="item.msg.picture?.url" />
+          <van-image @load="load" fit="contain" :src="item.msg.picture?.url" />
         </div>
         <van-image :src="item.fromAvatar" />
       </div>
@@ -130,7 +135,7 @@ const userStore = useUserStore()
         />
         <div class="content">
           <div class="time">{{ FormatTime(item.createTime) }}</div>
-          <van-image fit="contain" :src="item.msg.picture?.url" />
+          <van-image @load="load" fit="contain" :src="item.msg.picture?.url" />
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import io from 'socket.io-client'
 import { BASEURL } from '@/utils/request'
 import { useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
-import { onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import type { Message, TimeMessages } from '@/types/room'
 import { MsgType } from '@/enums/index'
 import { getConsultOrderDetail } from '@/services/consult'
@@ -95,9 +95,12 @@ const sendText = (v: string) => {
 }
 
 // 4. 接收消息
-socket.on('receiveChatMsg', (e: Message) => {
+socket.on('receiveChatMsg', async (e: Message) => {
   // 将接收到的消息添加到消息列表中
   list.value.push(e)
+  await nextTick()
+  // 滚动到底部
+  window.scrollTo(0, document.body.scrollHeight)
 })
 
 // 5. 发送消息（图片)
