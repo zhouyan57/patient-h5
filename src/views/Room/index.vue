@@ -136,6 +136,22 @@ const refresh = () => {
 
 // 7. 向后代组件传参
 provide('orderDetail', orderDetail)
+
+// 8. 定义修改评价分数的方法
+const changeEva = (score: number) => {
+  // 找到评价的数据源
+  const eva = list.value.find((item) => item.msgType === MsgType.CardEvaForm)
+  if (!eva) return
+  // 修改状态
+  eva.msgType = MsgType.CardEva
+  // 设置分数
+  eva.msg = {
+    evaluateDoc: {
+      score: score
+    }
+  }
+}
+provide('changeEva', changeEva)
 </script>
 
 <template>

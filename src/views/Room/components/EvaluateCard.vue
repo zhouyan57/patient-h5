@@ -3,10 +3,13 @@ import { MsgType } from '@/enums'
 import type { ConsultOrderItem } from '@/types/consult'
 import { inject, ref, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { evaluateDocFn } from '@/services/room'
+import { showToast } from 'vant'
 
 // 1. 接收评价状态
 defineProps<{
   type: MsgType
+  myscore?: number
 }>()
 
 // 2. 评论医生（准备参数）
@@ -18,6 +21,26 @@ const orderId = route.query.orderId
 const score = ref(0)
 const content = ref('')
 const anonymousFlag = ref(0)
+
+// 3. 提交参数
+const changeEva = inject<(score: number) => void>('changeEva')
+const submit = async () => {
+  // 判断参数是否存在
+  if (!orderDetail?.value.docInfo?.id) return showToast('医生不存在')
+  if (!orderId) return showToast('订单不存在')
+  if (!score.value) return showToast('请设置分数')
+  if (content.value.trim() === '') return showToast('请输入内容')
+  // 发送请求
+  await evaluateDocFn({
+    docId: orderDetail.value.docInfo.id,
+    orderId: orderId as string,
+    score: score.value,
+    content: content.value,
+    anonymousFlag: anonymousFlag.value
+  })
+  // 由于服务器没有返回提交评价后的数据，所以我们应该直接修改评价数据
+  changeEva && changeEva(score.value)
+}
 </script>
 <template>
   <!-- 显示评价 -->
@@ -25,7 +48,7 @@ const anonymousFlag = ref(0)
     <p class="title">医生服务评价</p>
     <p class="desc">我们会更加努力提升服务质量</p>
     <van-rate
-      :modelValue="3"
+      :modelValue="myscore"
       size="7vw"
       gutter="3vw"
       color="#FADB14"
@@ -57,7 +80,7 @@ const anonymousFlag = ref(0)
         @update:model-value="anonymousFlag = $event ? 1 : 0"
         >匿名评价
       </van-checkbox>
-      <van-button type="primary" size="small" round> 提交评价 </van-button>
+      <van-button type="primary" size="small" round @click="submit"> 提交评价 </van-button>
     </div>
   </div>
 </template>

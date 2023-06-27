@@ -203,7 +203,7 @@ const buy = (pre: Prescription | undefined) => {
       v-if="item.msgType === MsgType.CardEvaForm || item.msgType === MsgType.CardEva"
     >
       <!-- 评论信息 -->
-      <EvaluateCard :type="item.msgType"></EvaluateCard>
+      <EvaluateCard :type="item.msgType" :myscore="item.msg.evaluateDoc?.score"></EvaluateCard>
     </div>
   </div>
 

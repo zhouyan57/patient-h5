@@ -103,3 +103,12 @@ export type TimeMessages = {
   // 会话ID
   sid: string
 }
+
+// 评价医生参数类型
+export type EvaludateDocParams = {
+  docId: string
+  orderId: string
+  score: number
+  content: string
+  anonymousFlag: number
+}
