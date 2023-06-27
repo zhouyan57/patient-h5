@@ -3,8 +3,8 @@ import { OrderType } from '@/enums'
 
 // 1. 接收数据
 defineProps<{
-  status: OrderType
-  time: number
+  status?: OrderType
+  time?: number
 }>()
 </script>
 

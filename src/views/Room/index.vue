@@ -12,7 +12,6 @@ import { MsgType } from '@/enums/index'
 import { getConsultOrderDetail } from '@/services/consult'
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
-import dayjs from 'dayjs'
 // 1. 使用 websocket 来连接服务器
 const userStore = useUserStore()
 const route = useRoute()
@@ -33,11 +32,11 @@ socket.on('connect', () => {
   console.log('连接成功')
   // 2. 获取默认聊天记录
   // 定义默认聊天记录数组
-  const defaultArr: Message[] = []
   socket.on('chatMsgList', (res: { data: TimeMessages[] }) => {
+    const defaultArr: Message[] = []
+    // 得到聊天记录的时间
+    time.value = res.data[0].createTime
     // 得到返回消息的时间，生成为一条信息
-    console.log('chatMsgList', res.data)
-
     defaultArr.push({
       msgType: MsgType.Notify,
       createTime: res.data[0].createTime,
@@ -115,6 +114,15 @@ const sendImg = (v: { id: string; url: string }) => {
     }
   })
 }
+
+// 6. 下拉获取聊天记录
+const loading = ref(false)
+const time = ref('')
+const refresh = () => {
+  // 去服务器获取聊天记录
+  socket.emit('getChatMsgList', 20, time.value, route.query.orderId)
+  loading.value = false
+}
 </script>
 
 <template>
@@ -123,7 +131,9 @@ const sendImg = (v: { id: string; url: string }) => {
     <!-- 状态栏 -->
     <RoomStatus :status="orderDetail?.status" :time="orderDetail?.countdown"></RoomStatus>
     <!-- 消息卡片 -->
-    <room-message :list="list"></room-message>
+    <van-pull-refresh v-model="loading" @refresh="refresh">
+      <room-message :list="list"></room-message>
+    </van-pull-refresh>
     <!-- 操作栏 -->
     <RoomAction
       @send-text="sendText"
