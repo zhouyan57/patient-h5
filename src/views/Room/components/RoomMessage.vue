@@ -6,8 +6,9 @@ import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores'
 import dayjs from 'dayjs'
 // 1. 接收数据源
-defineProps<{
+const props = defineProps<{
   list: Message[]
+  isHistory: boolean // 判断是否是历史记录
 }>()
 
 // 2. 预览图片
@@ -53,6 +54,7 @@ const userStore = useUserStore()
 
 // 6. 图片加载完毕之后滚动到底部
 const load = () => {
+  if (props.isHistory) return
   window.scrollTo(0, document.body.scrollHeight)
 }
 </script>

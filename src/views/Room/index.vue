@@ -97,6 +97,8 @@ const sendText = (v: string) => {
 socket.on('receiveChatMsg', async (e: Message) => {
   // 将接收到的消息添加到消息列表中
   list.value.push(e)
+  // 将状态修改为 false
+  isHistory.value = false
   await nextTick()
   // 滚动到底部
   window.scrollTo(0, document.body.scrollHeight)
@@ -118,10 +120,13 @@ const sendImg = (v: { id: string; url: string }) => {
 // 6. 下拉获取聊天记录
 const loading = ref(false)
 const time = ref('')
+// 标识当前请求是否是历史请求
+const isHistory = ref(false)
 const refresh = () => {
   // 去服务器获取聊天记录
   socket.emit('getChatMsgList', 20, time.value, route.query.orderId)
   loading.value = false
+  isHistory.value = true
 }
 </script>
 
@@ -132,7 +137,7 @@ const refresh = () => {
     <RoomStatus :status="orderDetail?.status" :time="orderDetail?.countdown"></RoomStatus>
     <!-- 消息卡片 -->
     <van-pull-refresh v-model="loading" @refresh="refresh">
-      <room-message :list="list"></room-message>
+      <room-message :list="list" :isHistory="isHistory"></room-message>
     </van-pull-refresh>
     <!-- 操作栏 -->
     <RoomAction
