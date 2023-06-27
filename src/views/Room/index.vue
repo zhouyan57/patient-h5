@@ -73,6 +73,11 @@ const getOrderDetail = async () => {
 }
 onMounted(async () => {
   await getOrderDetail()
+  // 使用 websocket 监听订单状态的变化
+  socket.on('statusChange', async () => {
+    // 获取新的订单信息
+    await getOrderDetail()
+  })
 })
 </script>
 
