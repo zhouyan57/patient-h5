@@ -10,7 +10,9 @@ import type {
   ConsultOrderPreParams,
   ConsultOrderPreData,
   PartialConsult,
-  ConsultOrderItem
+  ConsultOrderItem,
+  ConsultOrderListParams,
+  ConsultOrderPage
 } from '@/types/consult'
 // 1. 首页-查询推荐/减脂/饮食健康/关注页面--百科文章列表
 export const getKnowledgeList = (params: KnowledgeParams) =>
@@ -49,3 +51,7 @@ export const getConsultOrderDetail = (orderId: string) =>
 // 10. 药品订单-根据处方ID查询处方单
 export const getPrescriptionUrl = (id: string) =>
   request<{ url: string }>(`/patient/consult/prescription/${id}`)
+
+// 11. 问诊记录-订单列表-找医生、极速问诊、开药问诊
+export const getConsultOrderList = (params: ConsultOrderListParams) =>
+  request<ConsultOrderPage>('/patient/consult/order/list', 'get', params)

@@ -198,3 +198,17 @@ export type ConsultOrderItem = Consult & {
   // 实付款
   actualPayment: number
 }
+
+// 问诊订单列表参数类型
+export type ConsultOrderListParams = {
+  current: number
+  pageSize: number
+  type: ConsultType
+}
+
+// 问诊订单列表分类数据类型
+export type ConsultOrderPage = {
+  total: number
+  pageTotal: number
+  rows: ConsultOrderItem[]
+}
