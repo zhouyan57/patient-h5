@@ -1,24 +1,30 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { ConsultOrderItem } from '@/types/consult'
+// 1.0 接收数据
+defineProps<{
+  data: ConsultOrderItem
+}>()
+</script>
 
 <template>
   <div class="consult-item">
     <div class="head van-hairline--bottom">
       <img class="img" src="@/assets/avatar-doctor.svg" />
-      <p>极速问诊（自动分配医生）</p>
-      <span>待支付</span>
+      <p>{{ data.docInfo?.name || '极速问诊（自动分配医生）' }}</p>
+      <span>{{ data.statusValue }}</span>
     </div>
     <div class="body">
       <div class="body-row">
         <div class="body-label">病情描述</div>
-        <div class="body-value">腹痛腹泻 胃部有些痉挛</div>
+        <div class="body-value">{{ data.illnessDesc }}</div>
       </div>
       <div class="body-row">
         <div class="body-label">价格</div>
-        <div class="body-value">¥ 39.00</div>
+        <div class="body-value">¥ {{ data.payment.toFixed(2) }}</div>
       </div>
       <div class="body-row">
         <div class="body-label">创建时间</div>
-        <div class="body-value tip">2019-07-08 09:55:54</div>
+        <div class="body-value tip">{{ data.createTime }}</div>
       </div>
     </div>
     <div class="foot">
