@@ -4,7 +4,7 @@ import { OrderType } from '@/enums'
 import { computed, ref } from 'vue'
 import { orderCancel, orderDel } from '@/services/consult'
 import { showToast } from 'vant'
-import { useShowPrescription } from '@/composable'
+import { useShowPrescription, useOrderCancel } from '@/composable'
 
 // 1.0 接收数据
 const props = defineProps<{
@@ -26,18 +26,19 @@ const onSelect = (action: { text: string }) => {
 }
 
 // 3. 取消订单
-const loading = ref(false)
-const cancel = async (data: ConsultOrderItem) => {
-  if (!data.id) return showToast('订单 id 有误')
-  loading.value = true
-  setTimeout(async () => {
-    await orderCancel(data.id)
-    // 手动让订单状态改为已取消
-    data.status = OrderType.ConsultCancel
-    data.statusValue = '已取消'
-    loading.value = false
-  }, 1000)
-}
+const { loading, cancel } = useOrderCancel()
+// const loading = ref(false)
+// const cancel = async (data: ConsultOrderItem) => {
+//   if (!data.id) return showToast('订单 id 有误')
+//   loading.value = true
+//   setTimeout(async () => {
+//     await orderCancel(data.id)
+//     // 手动让订单状态改为已取消
+//     data.status = OrderType.ConsultCancel
+//     data.statusValue = '已取消'
+//     loading.value = false
+//   }, 1000)
+// }
 
 // 4. 删除订单
 const emit = defineEmits<{

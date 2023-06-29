@@ -1,7 +1,9 @@
 import { followLike } from '@/services/consult'
-import { showImagePreview, showSuccessToast } from 'vant'
+import { showSuccessToast, showImagePreview, showToast } from 'vant'
 import { ref } from 'vue'
-import { getPrescriptionUrl } from '@/services/consult'
+import { getPrescriptionUrl, orderCancel } from '@/services/consult'
+import type { ConsultOrderItem } from '@/types/consult'
+import { OrderType } from '@/enums'
 
 // 1. 关注功能
 export const useFollow = () => {
@@ -38,4 +40,21 @@ export const useShowPrescription = () => {
   return {
     checkPre
   }
+}
+
+// 3. 取消订单
+export const useOrderCancel = () => {
+  const loading = ref(false)
+  const cancel = async (data: ConsultOrderItem) => {
+    if (!data.id) return showToast('订单 id 有误')
+    loading.value = true
+    setTimeout(async () => {
+      await orderCancel(data.id)
+      // 手动让订单状态改为已取消
+      data.status = OrderType.ConsultCancel
+      data.statusValue = '已取消'
+      loading.value = false
+    }, 1000)
+  }
+  return { loading, cancel }
 }
