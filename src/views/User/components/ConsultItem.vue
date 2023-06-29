@@ -8,20 +8,20 @@ import { useShowPrescription, useOrderCancel, useOrderDel } from '@/composable'
 const props = defineProps<{
   data: ConsultOrderItem
 }>()
-// 2. 渲染按钮
-const showPopover = ref(false)
-// const actions = [{ text: '查看处方' }, { text: '删除订单' }]
-const actions = computed(() => {
-  return [{ text: '查看处方', disabled: props.data.prescriptionId }, { text: '删除订单' }]
-})
-// 点击更多选项时会触发的方法
-const onSelect = (action: { text: string }) => {
-  if (action.text === '删除订单') {
-    del(props.data.id)
-  } else {
-    checkPre(props.data.prescriptionId)
-  }
-}
+// // 2. 渲染按钮
+// const showPopover = ref(false)
+// // const actions = [{ text: '查看处方' }, { text: '删除订单' }]
+// const actions = computed(() => {
+//   return [{ text: '查看处方', disabled: props.data.prescriptionId }, { text: '删除订单' }]
+// })
+// // 点击更多选项时会触发的方法
+// const onSelect = (action: { text: string }) => {
+//   if (action.text === '删除订单') {
+//     del(props.data.id)
+//   } else {
+//     checkPre(props.data.prescriptionId)
+//   }
+// }
 
 // 3. 取消订单
 const { loading, cancel } = useOrderCancel()
@@ -137,11 +137,16 @@ const { checkPre } = useShowPrescription()
     </div>
     <!-- 已完成 -->
     <div class="foot complete" v-if="data.status === OrderType.ConsultComplete">
-      <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect">
+      <!-- <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect">
         <template #reference>
           <span>更多</span>
         </template>
-      </van-popover>
+      </van-popover> -->
+      <cp-consult-more
+        :disabled="data.prescriptionId ? false : true"
+        @check-pre="checkPre(data.prescriptionId)"
+        @del-item="del(data.id)"
+      ></cp-consult-more>
       <div>
         <van-button
           @click="$router.push(`/room?orderId=${data.id}`)"
