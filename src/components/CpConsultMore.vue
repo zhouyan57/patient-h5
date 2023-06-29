@@ -23,7 +23,12 @@ const onSelect = (action: { text: string }) => {
 }
 </script>
 <template>
-  <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect">
+  <van-popover
+    v-model:show="showPopover"
+    :actions="actions"
+    @select="onSelect"
+    placement="top-start"
+  >
     <template #reference>
       <span>更多</span>
     </template>
