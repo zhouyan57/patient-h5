@@ -55,3 +55,6 @@ export const getPrescriptionUrl = (id: string) =>
 // 11. 问诊记录-订单列表-找医生、极速问诊、开药问诊
 export const getConsultOrderList = (params: ConsultOrderListParams) =>
   request<ConsultOrderPage>('/patient/consult/order/list', 'get', params)
+
+// 12. 订单-取消订单
+export const orderCancel = (id: string) => request(`/patient/order/cancel/${id}`, 'PUT')

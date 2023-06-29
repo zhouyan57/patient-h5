@@ -2,6 +2,8 @@
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
 import { computed, ref } from 'vue'
+import { orderCancel } from '@/services/consult'
+import { showToast } from 'vant'
 // 1.0 接收数据
 const props = defineProps<{
   data: ConsultOrderItem
@@ -14,6 +16,20 @@ const actions = computed(() => {
 })
 const onSelect = (action: { text: string }) => {
   console.log('onSelect', action)
+}
+
+// 3. 取消订单
+const loading = ref(false)
+const cancel = async (data: ConsultOrderItem) => {
+  if (!data.id) return showToast('订单 id 有误')
+  loading.value = true
+  setTimeout(async () => {
+    await orderCancel(data.id)
+    // 手动让订单状态改为已取消
+    data.status = OrderType.ConsultCancel
+    data.statusValue = '已取消'
+    loading.value = false
+  }, 1000)
 }
 </script>
 
@@ -44,7 +60,9 @@ const onSelect = (action: { text: string }) => {
     </div> -->
     <!-- 待支付 -->
     <div class="foot" v-if="data.status === OrderType.ConsultPay">
-      <van-button class="gray" plain size="small" round>取消问诊</van-button>
+      <van-button :loading="loading" @click="cancel(data)" class="gray" plain size="small" round
+        >取消问诊</van-button
+      >
       <van-button
         @click="$router.push(`/user/consult/${data.id}`)"
         type="primary"
@@ -56,7 +74,9 @@ const onSelect = (action: { text: string }) => {
     </div>
     <!-- 待接诊 -->
     <div class="foot" v-if="data.status === OrderType.ConsultWait">
-      <van-button class="gray" plain size="small" round>取消问诊</van-button>
+      <van-button :loading="loading" @click="cancel(data)" class="gray" plain size="small" round
+        >取消问诊</van-button
+      >
       <van-button
         @click="$router.push(`/room?orderId=${data.id}`)"
         type="primary"
