@@ -1,29 +1,70 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getConsultOrderDetail } from '@/services/consult'
+import type { ConsultOrderItem } from '@/types/consult'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+// 1. 获取订单详情数据
+// 得到订单 id
+const route = useRoute()
+const orderId = route.params.id
+const orderDetail = ref<ConsultOrderItem>()
+onMounted(async () => {
+  const res = await getConsultOrderDetail(orderId as string)
+  orderDetail.value = res.data
+})
+// 患病时间选项
+const timeOptions = [
+  { label: '一周内', value: 1 },
+  { label: '一月内', value: 2 },
+  { label: '半年内', value: 3 },
+  { label: '大于半年', value: 4 }
+]
+// 是否就诊
+const flagOptions = [
+  { label: '就诊过', value: 1 },
+  { label: '没就诊过', value: 0 }
+]
+// 根据 value 得到患者的 label
+const getTimeLabel = (value: number | undefined) => {
+  if (value === undefined) return
+  return timeOptions.find((item) => item.value === value)?.label
+}
+// 根据 value 得到是否就诊的 label
+const getFlagLabel = (value: number | undefined) => {
+  if (value === undefined) return
+  return flagOptions.find((item) => item.value === value)?.label
+}
+</script>
 
 <template>
   <div class="consult-detail-page">
     <cp-nav-bar title="问诊详情" />
     <div class="detail-head">
       <div class="text">
-        <h3>图文问诊 39 元</h3>
-        <span class="sta green">待支付</span>
+        <h3>图文问诊 {{ orderDetail?.payment }} 元</h3>
+        <span class="sta green">{{ orderDetail?.statusValue }}</span>
         <p class="tip">服务医生信息</p>
       </div>
       <div class="card">
         <img class="avatar" src="@/assets/avatar-doctor.svg" alt="" />
         <p class="doc">
           <span>极速问诊</span>
-          <span>自动分配医生</span>
+          <span>
+            {{ orderDetail?.docInfo?.name ? orderDetail?.docInfo?.name : '自动分配医生' }}
+          </span>
         </p>
         <van-icon name="arrow" />
       </div>
     </div>
     <div class="detail-patient">
       <van-cell-group :border="false">
-        <van-cell title="患者信息" value="李富贵 | 男 | 30岁" />
-        <van-cell title="患病时长" value="一周内" />
-        <van-cell title="就诊情况" value="未就诊过" />
-        <van-cell title="病情描述" label="头痛，头晕，恶心" />
+        <van-cell
+          title="患者信息"
+          :value="`${orderDetail?.patientInfo.name} | ${orderDetail?.patientInfo.genderValue} | ${orderDetail?.patientInfo.age}岁`"
+        />
+        <van-cell title="患病时长" :value="getTimeLabel(orderDetail?.illnessTime)" />
+        <van-cell title="就诊情况" :value="getFlagLabel(orderDetail?.consultFlag)" />
+        <van-cell title="病情描述" :label="orderDetail?.illnessDesc" />
       </van-cell-group>
     </div>
     <div class="detail-order">
@@ -32,20 +73,20 @@
         <van-cell title="订单编号">
           <template #value>
             <span class="copy">复制</span>
-            202201127465
+            {{ orderDetail?.orderNo }}
           </template>
         </van-cell>
-        <van-cell title="创建时间" value="2022-01-23 09:23:46" />
-        <van-cell title="应付款" value="￥39" />
-        <van-cell title="优惠券" value="-￥0" />
-        <van-cell title="积分抵扣" value="-￥0" />
-        <van-cell title="实付款" value="￥39" class="price" />
+        <van-cell title="创建时间" :value="orderDetail?.createTime" />
+        <van-cell title="应付款" :value="`￥${orderDetail?.payment}`" />
+        <van-cell title="优惠券" :value="`-￥${orderDetail?.couponDeduction}`" />
+        <van-cell title="积分抵扣" :value="`-￥${orderDetail?.pointDeduction}`" />
+        <van-cell title="实付款" :value="`￥${orderDetail?.actualPayment}`" class="price" />
       </van-cell-group>
     </div>
     <div class="detail-action van-hairline--top">
       <div class="price">
         <span>需付款</span>
-        <span>￥39.00</span>
+        <span>￥{{ orderDetail?.actualPayment }}</span>
       </div>
       <van-button type="default" round>取消问诊</van-button>
       <van-button type="primary" round>继续支付</van-button>
