@@ -156,7 +156,13 @@ const beforeClose = () => {
     />
   </div>
   <!-- 支付抽屉 -->
-  <van-action-sheet
+  <cp-pay-sheet
+    :before-close="beforeClose"
+    v-model:show="show"
+    :actual-payment="consult?.actualPayment!"
+    :order-id="orderId"
+  ></cp-pay-sheet>
+  <!-- <van-action-sheet
     :close-on-popstate="false"
     :closeable="false"
     :close-on-click-overlay="true"
@@ -180,7 +186,7 @@ const beforeClose = () => {
         <van-button @click="submit" type="primary" round block>立即支付</van-button>
       </div>
     </div>
-  </van-action-sheet>
+  </van-action-sheet> -->
 </template>
 
 <style lang="scss" scoped>
@@ -247,25 +253,25 @@ const beforeClose = () => {
     width: 160px;
   }
 }
-.pay-type {
-  .amount {
-    padding: 20px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  .btn {
-    padding: 15px;
-  }
-  .van-cell {
-    align-items: center;
-    .cp-icon {
-      margin-right: 10px;
-      font-size: 18px;
-    }
-    .van-checkbox :deep(.van-checkbox__icon) {
-      font-size: 16px;
-    }
-  }
-}
+// .pay-type {
+//   .amount {
+//     padding: 20px;
+//     text-align: center;
+//     font-size: 16px;
+//     font-weight: bold;
+//   }
+//   .btn {
+//     padding: 15px;
+//   }
+//   .van-cell {
+//     align-items: center;
+//     .cp-icon {
+//       margin-right: 10px;
+//       font-size: 18px;
+//     }
+//     .van-checkbox :deep(.van-checkbox__icon) {
+//       font-size: 16px;
+//     }
+//   }
+// }
 </style>
