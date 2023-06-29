@@ -1,4 +1,4 @@
-import { followLike } from '@/services/consult'
+import { followLike, orderDel } from '@/services/consult'
 import { showSuccessToast, showImagePreview, showToast } from 'vant'
 import { ref } from 'vue'
 import { getPrescriptionUrl, orderCancel } from '@/services/consult'
@@ -57,4 +57,25 @@ export const useOrderCancel = () => {
     }, 1000)
   }
   return { loading, cancel }
+}
+
+// 4. 删除订单
+export const useOrderDel = (callback: (myid: string) => void) => {
+  // const emit = defineEmits<{
+  //   (e: 'del-item', id: string): void
+  // }>()
+  const delLoading = ref(false)
+  const del = (id: string | undefined) => {
+    if (!id) return showToast('订单 id 有误')
+    delLoading.value = true
+    setTimeout(async () => {
+      await orderDel(id)
+      // 将要删除订单的 id 提交给父组件，在父组件中删除订单
+      // emit('del-item', id)
+      // 在这里执行一段逻辑代码
+      callback && callback(id)
+      delLoading.value = false
+    }, 1000)
+  }
+  return { delLoading, del }
 }

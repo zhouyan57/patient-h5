@@ -2,9 +2,7 @@
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
 import { computed, ref } from 'vue'
-import { orderCancel, orderDel } from '@/services/consult'
-import { showToast } from 'vant'
-import { useShowPrescription, useOrderCancel } from '@/composable'
+import { useShowPrescription, useOrderCancel, useOrderDel } from '@/composable'
 
 // 1.0 接收数据
 const props = defineProps<{
@@ -44,17 +42,20 @@ const { loading, cancel } = useOrderCancel()
 const emit = defineEmits<{
   (e: 'del-item', id: string): void
 }>()
-const delLoading = ref(false)
-const del = (id: string | undefined) => {
-  if (!id) return showToast('订单 id 有误')
-  delLoading.value = true
-  setTimeout(async () => {
-    await orderDel(id)
-    // 将要删除订单的 id 提交给父组件，在父组件中删除订单
-    emit('del-item', id)
-    delLoading.value = false
-  }, 1000)
-}
+const { delLoading, del } = useOrderDel((id: string) => {
+  emit('del-item', id)
+})
+// const delLoading = ref(false)
+// const del = (id: string | undefined) => {
+//   if (!id) return showToast('订单 id 有误')
+//   delLoading.value = true
+//   setTimeout(async () => {
+//     await orderDel(id)
+//     // 将要删除订单的 id 提交给父组件，在父组件中删除订单
+//     emit('del-item', id)
+//     delLoading.value = false
+//   }, 1000)
+// }
 
 // 5. 查看处方
 const { checkPre } = useShowPrescription()
