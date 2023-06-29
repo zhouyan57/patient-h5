@@ -37,7 +37,7 @@ const getFlagLabel = (value: number | undefined) => {
 </script>
 
 <template>
-  <div class="consult-detail-page">
+  <div class="consult-detail-page" v-if="orderDetail">
     <cp-nav-bar title="问诊详情" />
     <div class="detail-head">
       <div class="text">
@@ -91,6 +91,11 @@ const getFlagLabel = (value: number | undefined) => {
       <van-button type="default" round>取消问诊</van-button>
       <van-button type="primary" round>继续支付</van-button>
     </div>
+  </div>
+  <div class="consult-detail-page" v-else>
+    <cp-nav-bar title="问诊详情" />
+    <van-skeleton title :row="4" style="margin-top: 30px" />
+    <van-skeleton title :row="4" style="margin-top: 30px" />
   </div>
 </template>
 
