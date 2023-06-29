@@ -1,7 +1,9 @@
 import { followLike } from '@/services/consult'
-import { showSuccessToast } from 'vant'
+import { showImagePreview, showSuccessToast } from 'vant'
 import { ref } from 'vue'
+import { getPrescriptionUrl } from '@/services/consult'
 
+// 1. 关注功能
 export const useFollow = () => {
   const loading = ref(false)
   const follow = async (item: { id: string; likeFlag: 0 | 1 }) => {
@@ -21,5 +23,19 @@ export const useFollow = () => {
   return {
     loading,
     follow
+  }
+}
+
+// 2. 查看处方
+export const useShowPrescription = () => {
+  const checkPre = async (id: string | undefined) => {
+    if (id === undefined) return
+    // 得到处方路径
+    const res = await getPrescriptionUrl(id)
+    // 展示图片
+    showImagePreview([res.data.url])
+  }
+  return {
+    checkPre
   }
 }

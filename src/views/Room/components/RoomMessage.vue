@@ -5,9 +5,9 @@ import type { Message, Prescription } from '@/types/room'
 import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores'
 import dayjs from 'dayjs'
-import { getPrescriptionUrl } from '@/services/consult'
 import { useRouter } from 'vue-router'
 import EvaluateCard from './EvaluateCard.vue'
+import { useShowPrescription } from '@/composable'
 
 // 1. 接收数据源
 const props = defineProps<{
@@ -63,13 +63,14 @@ const load = () => {
 }
 
 // 7. 查看处方
-const checkPre = async (id: string | undefined) => {
-  if (id === undefined) return
-  // 得到处方路径
-  const res = await getPrescriptionUrl(id)
-  // 展示图片
-  showImagePreview([res.data.url])
-}
+// const checkPre = async (id: string | undefined) => {
+//   if (id === undefined) return
+//   // 得到处方路径
+//   const res = await getPrescriptionUrl(id)
+//   // 展示图片
+//   showImagePreview([res.data.url])
+// }
+const { checkPre } = useShowPrescription()
 
 // 8. 购买药品
 const router = useRouter()

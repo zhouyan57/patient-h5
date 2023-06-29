@@ -4,6 +4,8 @@ import { OrderType } from '@/enums'
 import { computed, ref } from 'vue'
 import { orderCancel, orderDel } from '@/services/consult'
 import { showToast } from 'vant'
+import { useShowPrescription } from '@/composable'
+
 // 1.0 接收数据
 const props = defineProps<{
   data: ConsultOrderItem
@@ -14,8 +16,13 @@ const showPopover = ref(false)
 const actions = computed(() => {
   return [{ text: '查看处方', disabled: props.data.prescriptionId }, { text: '删除订单' }]
 })
+// 点击更多选项时会触发的方法
 const onSelect = (action: { text: string }) => {
-  console.log('onSelect', action)
+  if (action.text === '删除订单') {
+    del(props.data.id)
+  } else {
+    checkPre(props.data.prescriptionId)
+  }
 }
 
 // 3. 取消订单
@@ -47,6 +54,9 @@ const del = (id: string | undefined) => {
     delLoading.value = false
   }, 1000)
 }
+
+// 5. 查看处方
+const { checkPre } = useShowPrescription()
 </script>
 
 <template>
@@ -104,7 +114,14 @@ const del = (id: string | undefined) => {
     </div>
     <!-- 咨询中 -->
     <div class="foot" v-if="data.status === OrderType.ConsultChat">
-      <van-button v-if="data.prescriptionId" class="gray" plain size="small" round>
+      <van-button
+        @click="checkPre(data.prescriptionId)"
+        v-if="data.prescriptionId"
+        class="gray"
+        plain
+        size="small"
+        round
+      >
         查看处方
       </van-button>
       <van-button
