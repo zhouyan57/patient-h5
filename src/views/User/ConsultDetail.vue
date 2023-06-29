@@ -4,6 +4,8 @@ import type { ConsultOrderItem } from '@/types/consult'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { OrderType } from '@/enums'
+import { useOrderCancel } from '@/composable'
+
 // 1. 获取订单详情数据
 // 得到订单 id
 const route = useRoute()
@@ -35,6 +37,9 @@ const getFlagLabel = (value: number | undefined) => {
   if (value === undefined) return
   return flagOptions.find((item) => item.value === value)?.label
 }
+
+// 2. 取消订单
+const { loading, cancel } = useOrderCancel()
 </script>
 
 <template>
@@ -93,7 +98,9 @@ const getFlagLabel = (value: number | undefined) => {
         <span>需付款</span>
         <span>￥{{ orderDetail?.actualPayment }}</span>
       </div>
-      <van-button type="default" round>取消问诊</van-button>
+      <van-button :loading="loading" @click="cancel(orderDetail!)" type="default" round
+        >取消问诊</van-button
+      >
       <van-button type="primary" round>继续支付</van-button>
     </div>
     <!-- 待接诊 -->
@@ -101,7 +108,9 @@ const getFlagLabel = (value: number | undefined) => {
       class="detail-action van-hairline--top"
       v-if="orderDetail.status === OrderType.ConsultWait"
     >
-      <van-button type="default" round>取消问诊</van-button>
+      <van-button :loading="loading" @click="cancel(orderDetail!)" type="default" round
+        >取消问诊</van-button
+      >
       <van-button @click="$router.push(`/room?orderId=${orderDetail?.id}`)" type="primary" round>
         继续沟通
       </van-button>
