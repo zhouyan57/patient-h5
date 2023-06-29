@@ -5,6 +5,9 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { OrderType } from '@/enums'
 import { useOrderCancel, useShowPrescription, useOrderDel } from '@/composable'
+import { useClipboard } from '@vueuse/core'
+import { showToast } from 'vant'
+import { watch } from 'vue'
 
 // 1. 获取订单详情数据
 // 得到订单 id
@@ -50,6 +53,18 @@ const { delLoading, del } = useOrderDel(() => {
 
 // 4. 查看处方
 const { checkPre } = useShowPrescription()
+
+// 5. 复制订单编号
+const { copy, copied, isSupported } = useClipboard()
+const onCopy = () => {
+  // 判断是否支持
+  if (!isSupported.value) return showToast('浏览器不支持该功能')
+  if (!orderDetail.value?.orderNo) return
+  copy(orderDetail.value?.orderNo)
+}
+watch(copied, () => {
+  if (copied.value) showToast('复制成功')
+})
 </script>
 
 <template>
@@ -88,7 +103,7 @@ const { checkPre } = useShowPrescription()
       <van-cell-group :border="false">
         <van-cell title="订单编号">
           <template #value>
-            <span class="copy">复制</span>
+            <span @click="onCopy" class="copy">复制</span>
             {{ orderDetail?.orderNo }}
           </template>
         </van-cell>
