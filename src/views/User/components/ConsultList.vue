@@ -33,12 +33,17 @@ const onLoad = async () => {
   // 当前页
   current.value++
 }
+
+// 2. 删除订单
+const delItem = (id: string) => {
+  consultList.value = consultList.value.filter((item) => item.id !== id)
+}
 </script>
 
 <template>
   <div class="consult-list">
     <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
-      <consult-item :data="i" v-for="i in consultList" :key="i.id" />
+      <consult-item @del-item="delItem" :data="i" v-for="i in consultList" :key="i.id" />
     </van-list>
   </div>
 </template>

@@ -2,7 +2,7 @@
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
 import { computed, ref } from 'vue'
-import { orderCancel } from '@/services/consult'
+import { orderCancel, orderDel } from '@/services/consult'
 import { showToast } from 'vant'
 // 1.0 接收数据
 const props = defineProps<{
@@ -29,6 +29,22 @@ const cancel = async (data: ConsultOrderItem) => {
     data.status = OrderType.ConsultCancel
     data.statusValue = '已取消'
     loading.value = false
+  }, 1000)
+}
+
+// 4. 删除订单
+const emit = defineEmits<{
+  (e: 'del-item', id: string): void
+}>()
+const delLoading = ref(false)
+const del = (id: string | undefined) => {
+  if (!id) return showToast('订单 id 有误')
+  delLoading.value = true
+  setTimeout(async () => {
+    await orderDel(id)
+    // 将要删除订单的 id 提交给父组件，在父组件中删除订单
+    emit('del-item', id)
+    delLoading.value = false
   }, 1000)
 }
 </script>
@@ -130,7 +146,9 @@ const cancel = async (data: ConsultOrderItem) => {
     </div>
     <!-- 已取消 -->
     <div class="foot" v-if="data.status === OrderType.ConsultCancel">
-      <van-button class="gray" plain size="small" round>删除订单</van-button>
+      <van-button :loading="delLoading" @click="del(data.id)" class="gray" plain size="small" round
+        >删除订单</van-button
+      >
       <van-button type="primary" plain size="small" round>咨询其它医生</van-button>
     </div>
   </div>
