@@ -68,7 +68,7 @@ const { checkPre } = useShowPrescription()
       <p>{{ data.docInfo?.name || '极速问诊（自动分配医生）' }}</p>
       <span>{{ data.statusValue }}</span>
     </div>
-    <div class="body">
+    <div @click="$router.push(`/user/consult/${data.id}`)" class="body">
       <div class="body-row">
         <div class="body-label">病情描述</div>
         <div class="body-value">{{ data.illnessDesc }}</div>

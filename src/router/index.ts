@@ -90,6 +90,11 @@ const router = createRouter({
       component: () => import('@/views/User/ConsultPage.vue'),
       meta: { title: '问诊记录' }
     },
+    {
+      path: '/user/consult/:id',
+      component: () => import('@/views/User/ConsultDetail.vue'),
+      meta: { title: '问诊详情' }
+    },
     // 重定向
     { path: '/', redirect: '/home' }
   ]
