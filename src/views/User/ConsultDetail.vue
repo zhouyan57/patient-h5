@@ -65,6 +65,9 @@ const onCopy = () => {
 watch(copied, () => {
   if (copied.value) showToast('复制成功')
 })
+
+// 6. 使用支付抽屉组件
+const show = ref(false)
 </script>
 
 <template>
@@ -126,7 +129,7 @@ watch(copied, () => {
       <van-button :loading="loading" @click="cancel(orderDetail!)" type="default" round
         >取消问诊</van-button
       >
-      <van-button type="primary" round>继续支付</van-button>
+      <van-button @click="show = true" type="primary" round>继续支付</van-button>
     </div>
     <!-- 待接诊 -->
     <div
@@ -183,6 +186,12 @@ watch(copied, () => {
       >
       <van-button type="primary" round>咨询其它医生 </van-button>
     </div>
+    <!-- 支付的抽屉 -->
+    <cp-pay-sheet
+      v-model:show="show"
+      :actual-payment="orderDetail.actualPayment"
+      :order-id="orderDetail.id"
+    ></cp-pay-sheet>
   </div>
   <div class="consult-detail-page" v-else>
     <cp-nav-bar title="问诊详情" />
