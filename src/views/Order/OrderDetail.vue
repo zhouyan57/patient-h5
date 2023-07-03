@@ -2,6 +2,8 @@
 import OrderMedical from './components/OrderMedical.vue'
 import { useOrderDetail } from '@/composable'
 import { useRoute } from 'vue-router'
+import { OrderType } from '@/enums'
+
 // 1. 获取订单数据
 const route = useRoute()
 const { orderInfo } = useOrderDetail(route.params.id as string)
@@ -54,29 +56,29 @@ const { orderInfo } = useOrderDetail(route.params.id as string)
       </van-cell-group>
     </div>
     <!-- 已取消 -->
-    <!-- <van-action-bar>
+    <van-action-bar v-if="orderInfo?.status === OrderType.MedicineCancel">
       <van-action-bar-icon icon="delete-o" text="删除" />
       <van-action-bar-button type="primary" text="沟通记录" />
-    </van-action-bar> -->
+    </van-action-bar>
     <!-- 待收货 -->
-    <van-action-bar>
+    <van-action-bar v-if="orderInfo?.status === OrderType.MedicineTake">
       <van-action-bar-button type="primary" text="确认收货" />
     </van-action-bar>
     <!-- 待发货 -->
-    <!-- <van-action-bar>
+    <van-action-bar v-if="orderInfo?.status === OrderType.MedicineSend">
       <van-action-bar-button type="primary" text="提醒发货" />
-    </van-action-bar> -->
+    </van-action-bar>
     <!-- 待支付 -->
-    <!-- <van-action-bar>
+    <van-action-bar v-if="orderInfo?.status === OrderType.MedicinePay">
       <p class="price">需要支付：<span>￥60</span></p>
       <van-action-bar-button color="#bbb" text="取消问诊" />
       <van-action-bar-button type="primary" text="继续支付" />
-    </van-action-bar> -->
+    </van-action-bar>
     <!-- 已完成 -->
-    <!-- <van-action-bar>
+    <van-action-bar v-if="orderInfo?.status === OrderType.MedicineComplete">
       <van-action-bar-icon icon="delete-o" text="删除" />
       <van-action-bar-button type="primary" text="再次购买" />
-    </van-action-bar> -->
+    </van-action-bar>
   </div>
 </template>
 
