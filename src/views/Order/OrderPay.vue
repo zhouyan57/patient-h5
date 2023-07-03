@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { getMedicalOrderPre } from '@/services/order'
-import type { OrderPre } from '@/types/order'
+import { getMedicalOrderPre, getAddressList } from '@/services/order'
+import type { OrderPre, AddressItem } from '@/types/order'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-// 1.0 得到药品信息
+// 1. 得到药品信息
 const route = useRoute()
 const orderInfo = ref<OrderPre>()
 onMounted(async () => {
   const res = await getMedicalOrderPre(route.query.id as string)
   orderInfo.value = res.data
+})
+
+// 2. 得到收货地址列表
+const addressList = ref<AddressItem[]>([])
+onMounted(async () => {
+  const res = await getAddressList()
+  addressList.value = res.data
 })
 </script>
 
@@ -18,10 +25,12 @@ onMounted(async () => {
     <div class="order-address">
       <p class="area">
         <van-icon name="location" />
-        <span>北京市昌平区</span>
+        <span>{{ addressList[0]?.province }}</span>
+        <span>{{ addressList[0]?.city }}</span>
+        <span>{{ addressList[0]?.county }}</span>
       </p>
-      <p class="detail">建材城西路金燕龙办公楼999号</p>
-      <p>李富贵 13211112222</p>
+      <p class="detail">{{ addressList[0]?.addressDetail }}</p>
+      <p>{{ addressList[0]?.receiver }} {{ addressList[0]?.mobile }}</p>
     </div>
     <div class="order-medical">
       <div class="head">
@@ -50,14 +59,6 @@ onMounted(async () => {
         <van-cell title="运费" :value="`￥${orderInfo?.expressFee}`" />
         <van-cell title="优惠券" :value="`-￥${orderInfo?.couponDeduction}`" />
         <van-cell title="实付款" :value="`￥${orderInfo?.actualPayment}`" class="price" />
-      </van-cell-group>
-    </div>
-    <div class="order-detail">
-      <van-cell-group>
-        <van-cell title="药品金额" value="￥50" />
-        <van-cell title="运费" value="￥4" />
-        <van-cell title="优惠券" value="-￥0" />
-        <van-cell title="实付款" value="￥54" class="price" />
       </van-cell-group>
     </div>
     <div class="order-tip">
