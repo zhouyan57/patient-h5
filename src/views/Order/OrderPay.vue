@@ -1,4 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getMedicalOrderPre } from '@/services/order'
+import type { OrderPre } from '@/types/order'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+// 1.0 得到药品信息
+const route = useRoute()
+const orderInfo = ref<OrderPre>()
+onMounted(async () => {
+  const res = await getMedicalOrderPre(route.query.id as string)
+  orderInfo.value = res.data
+})
+</script>
 
 <template>
   <div class="order-pay-page">
@@ -16,21 +28,29 @@
         <h3>优医药房</h3>
         <small>优医质保 假一赔十</small>
       </div>
-      <div class="item van-hairline--top" v-for="i in 2" :key="i">
-        <img class="img" src="@/assets/ad.png" alt="" />
+      <div class="item van-hairline--top" v-for="i in orderInfo?.medicines" :key="i.id">
+        <img class="img" :src="i.avatar" alt="" />
         <div class="info">
           <p class="name">
-            <span>优赛明 维生素E乳</span>
-            <span>x1</span>
+            <span>{{ i.name }}</span>
+            <span>x{{ i.quantity }}</span>
           </p>
           <p class="size">
-            <van-tag>处方药</van-tag>
-            <span>80ml</span>
+            <van-tag>{{ i.prescriptionFlag ? '处方药' : '非处方药' }}</van-tag>
+            <span>{{ i.specs }}</span>
           </p>
-          <p class="price">￥25.00</p>
+          <p class="price">￥{{ i.amount }}</p>
         </div>
-        <div class="desc">用法用量：口服，每次1袋，每天3次，用药3天</div>
+        <div class="desc">用法用量：{{ i.usageDosag }}</div>
       </div>
+    </div>
+    <div class="order-detail">
+      <van-cell-group>
+        <van-cell title="药品金额" :value="`￥${orderInfo?.payment}`" />
+        <van-cell title="运费" :value="`￥${orderInfo?.expressFee}`" />
+        <van-cell title="优惠券" :value="`-￥${orderInfo?.couponDeduction}`" />
+        <van-cell title="实付款" :value="`￥${orderInfo?.actualPayment}`" class="price" />
+      </van-cell-group>
     </div>
     <div class="order-detail">
       <van-cell-group>
