@@ -1,9 +1,11 @@
 import { followLike, orderDel } from '@/services/consult'
 import { showSuccessToast, showImagePreview, showToast } from 'vant'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getPrescriptionUrl, orderCancel } from '@/services/consult'
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
+import { getMedicalOrderDetail } from '@/services/order'
+import type { OrderDetail } from '@/types/order'
 
 // 1. 关注功能
 export const useFollow = () => {
@@ -78,4 +80,16 @@ export const useOrderDel = (callback: (myid: string) => void) => {
     }, 1000)
   }
   return { delLoading, del }
+}
+
+// 5. 获取订单详情信息
+export const useOrderDetail = (id: string) => {
+  const orderInfo = ref<OrderDetail>()
+  onMounted(async () => {
+    const res = await getMedicalOrderDetail(id)
+    orderInfo.value = res.data
+  })
+  return {
+    orderInfo
+  }
 }
