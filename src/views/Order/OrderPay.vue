@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { getMedicalOrderPre, getAddressList } from '@/services/order'
+import { getMedicalOrderPre, getAddressList, createMedicineOrder } from '@/services/order'
 import type { OrderPre, AddressItem } from '@/types/order'
+import { showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 // 1. 得到药品信息
@@ -17,6 +18,21 @@ onMounted(async () => {
   const res = await getAddressList()
   addressList.value = res.data
 })
+
+// 3. 进入支付
+const agree = ref(false)
+// 订单 ID
+const orderId = ref('')
+const show = ref(false)
+const submit = async () => {
+  // 判断是否同意协议
+  if (!agree.value) return showToast('请同意协议')
+  // 生成订单
+  const res = await createMedicineOrder(route.query.id as string, addressList.value[0].id)
+  orderId.value = res.data.id
+  // 打开支付抽屉组件
+  show.value = true
+}
 </script>
 
 <template>
@@ -66,14 +82,22 @@ onMounted(async () => {
         由于药品的特殊性，如非错发、漏发药品的情况，药品一经发出
         不得退换，请核对药品信息无误后下单。
       </p>
-      <van-checkbox>我已同意<a href="javascript:;">支付协议</a></van-checkbox>
+      <van-checkbox v-model="agree">我已同意<a href="javascript:;">支付协议</a></van-checkbox>
     </div>
     <van-submit-bar
+      @click="submit"
       :price="50 * 100"
       button-text="立即支付"
       button-type="primary"
       text-align="left"
     ></van-submit-bar>
+    <!-- 支付抽屉 -->
+    <CpPaySheet
+      v-model:show="show"
+      :actual-payment="orderInfo?.actualPayment!"
+      :order-id="orderId"
+      pay-callback="http://localhost:5173/order/pay/result"
+    ></CpPaySheet>
   </div>
 </template>
 
