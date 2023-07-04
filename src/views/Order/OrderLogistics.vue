@@ -23,9 +23,24 @@ onMounted(async () => {
     key: '9c647d09cdb1aca0eec48d143796ab25',
     version: '2.0'
   }).then((AMap) => {
+    // 初始化地图
     const map = new AMap.Map('map', {
       mapStyle: 'amap://styles/normal',
       zoom: 12
+    })
+    // 绘制轨迹
+    AMap.plugin('AMap.Driving', () => {
+      const driving = new AMap.Driving({
+        map: map,
+        showTraffic: false // 关闭实时路况
+      })
+      // 设置起点
+      const start = logisticsInfo.value?.logisticsInfo.shift()
+      // 设置终点
+      const end = logisticsInfo.value?.logisticsInfo.pop()
+      driving.search([start?.longitude, start?.latitude], [end?.longitude, end?.latitude], () => {
+        console.log('绘制路线')
+      })
     })
   })
 })
