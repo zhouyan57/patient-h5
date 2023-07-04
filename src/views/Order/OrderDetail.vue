@@ -6,13 +6,14 @@ import { OrderType } from '@/enums'
 
 // 1. 获取订单数据
 const route = useRoute()
-const { orderInfo } = useOrderDetail(route.params.id as string)
+const routeId = route.params.id
+const { orderInfo } = useOrderDetail(routeId as string)
 </script>
 
 <template>
   <div class="order-detail-page">
     <cp-nav-bar title="药品订单详情" />
-    <div class="order-head">
+    <div class="order-head" @click="$router.push(`/order/logistics/${routeId}`)">
       <div class="card">
         <div class="logistics">
           <p>{{ orderInfo?.expressInfo.content }}</p>
