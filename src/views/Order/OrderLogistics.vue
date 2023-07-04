@@ -66,7 +66,19 @@ onMounted(async () => {
         [end?.longitude, end?.latitude],
         { waypoints: wayPoint },
         () => {
-          console.log('绘制路线')
+          // 当路径绘制完毕之后，再绘制快递所在的位置
+          const current = logisticsInfo.value?.currentLocationInfo
+          // 开始绘制标记
+          const currentMark = new AMap.Marker({
+            icon: carImg,
+            position: [current?.longitude, current?.latitude],
+            anchor: 'bottom-center'
+          })
+          map.add(currentMark)
+          setTimeout(() => {
+            map.setFitView([currentMark])
+            map.setZoom(15)
+          }, 3000)
         }
       )
     })
