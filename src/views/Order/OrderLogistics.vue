@@ -38,9 +38,18 @@ onMounted(async () => {
       const start = logisticsInfo.value?.logisticsInfo.shift()
       // 设置终点
       const end = logisticsInfo.value?.logisticsInfo.pop()
-      driving.search([start?.longitude, start?.latitude], [end?.longitude, end?.latitude], () => {
-        console.log('绘制路线')
+      // 设置途径点
+      const wayPoint = logisticsInfo.value?.logisticsInfo.map((item) => {
+        return [item.longitude, item.latitude]
       })
+      driving.search(
+        [start?.longitude, start?.latitude],
+        [end?.longitude, end?.latitude],
+        { waypoints: wayPoint },
+        () => {
+          console.log('绘制路线')
+        }
+      )
     })
   })
 })
