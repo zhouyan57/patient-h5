@@ -4,6 +4,9 @@ import type { Logistics } from '@/types/order'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import AMapLoader from '@amap/amap-jsapi-loader'
+import startImg from '@/assets/start.png'
+import endImg from '@/assets/end.png'
+import carImg from '@/assets/car.png'
 
 // 1. 获取物流信息
 const route = useRoute()
@@ -32,7 +35,8 @@ onMounted(async () => {
     AMap.plugin('AMap.Driving', () => {
       const driving = new AMap.Driving({
         map: map,
-        showTraffic: false // 关闭实时路况
+        showTraffic: false, // 关闭实时路况
+        hideMarkers: true // 关闭默认标识
       })
       // 设置起点
       const start = logisticsInfo.value?.logisticsInfo.shift()
@@ -42,6 +46,21 @@ onMounted(async () => {
       const wayPoint = logisticsInfo.value?.logisticsInfo.map((item) => {
         return [item.longitude, item.latitude]
       })
+      // 添加标记
+      // 起点标识
+      const startMark = new AMap.Marker({
+        icon: startImg,
+        position: [start?.longitude, start?.latitude],
+        anchor: 'bottom-center'
+      })
+      map.add(startMark)
+      // 终点标识
+      const endMark = new AMap.Marker({
+        icon: endImg,
+        position: [end?.longitude, end?.latitude],
+        anchor: 'bottom-center'
+      })
+      map.add(endMark)
       driving.search(
         [start?.longitude, start?.latitude],
         [end?.longitude, end?.latitude],
