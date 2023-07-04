@@ -113,7 +113,8 @@ const router = createRouter({
       meta: { title: '药品订单详情' }
     },
     {
-      path: '/order/logistics/:id',
+      // path: '/order/logistics/:id',
+      path: '/order/logistics',
       component: () => import('@/views/Order/OrderLogistics.vue'),
       meta: { title: '物流详情' }
     },

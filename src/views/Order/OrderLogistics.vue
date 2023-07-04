@@ -3,6 +3,8 @@ import { getLogistics } from '@/services/order'
 import type { Logistics } from '@/types/order'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import AMapLoader from '@amap/amap-jsapi-loader'
+
 // 1. 获取物流信息
 const route = useRoute()
 const orderId = route.params.id
@@ -10,6 +12,22 @@ const logisticsInfo = ref<Logistics>()
 onMounted(async () => {
   const res = await getLogistics(orderId as string)
   logisticsInfo.value = res.data
+})
+
+// 2. 初始化高德地图
+window._AMapSecurityConfig = {
+  securityJsCode: '2a07402e3a5996d80c57c9ab0cd3d75c'
+}
+onMounted(async () => {
+  AMapLoader.load({
+    key: '9c647d09cdb1aca0eec48d143796ab25',
+    version: '2.0'
+  }).then((AMap) => {
+    const map = new AMap.Map('map', {
+      mapStyle: 'amap://styles/normal',
+      zoom: 12
+    })
+  })
 })
 </script>
 
